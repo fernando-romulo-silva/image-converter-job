@@ -1,0 +1,31 @@
+
+1) move files folder
+
+2) separate files
+
+3) load files
+   -> check image size
+   -> check file name (must be unique)
+
+
+4) send msg convert
+
+5) update status
+
+6) records problem
+
+6) move files
+
+
+
+
+You can calculate the file size (in bytes) using below formula:
+
+x = (n * (3/4)) - y
+Where:
+
+1. x is the size of a file in bytes
+
+2. n is the length of the Base64 String
+
+3. y will be 2 if Base64 ends with '==' and 1 if Base64 ends with '='.

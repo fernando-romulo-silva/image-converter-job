@@ -1,0 +1,41 @@
+#=====================================================================================================
+#
+#               IMAGE-CONVERTER-JOB-LOCAL
+#
+#============== Applicaton ===========================================================================
+application:
+     input-files-folder: classpath:folders/input
+     error-files-folder: classpath:folders/error
+     processing-files-folder: classpath:folders/processing
+     processed-files-folder: classpath:folders/processed
+     
+#============== image-converter-service ==============================================================
+image-converter-service:
+    url: http://127.0.0.1:8080
+    user : user
+    password : password     
+
+
+#============== Data Source ===========================================================================
+spring: 
+    sql.init:
+        schema-locations: classpath:db/db-schema-local.sql
+        data-locations: classpath:db/db-data-local.sql
+    datasource:
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+        username: sa
+        password: password
+    h2:
+        console:
+            enabled: true   
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                generated_statistics: false
+                show_sql: false
+                jdbc:
+                    time_zone: GMT-3                

@@ -1,7 +1,10 @@
 
 1) move files folder
 
-2) separate files
+2) separate files - "split -a 5 -l 4 #{jobParameters['inputFile']} #{jobParameters['stagingDirectory']}"
+
+https://stackoverflow.com/questions/43500034/trying-to-split-files-using-systemcommandtasklet-execution-of-system-command-d
+
 
 3) load files
    -> check image size

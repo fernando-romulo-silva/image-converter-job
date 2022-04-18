@@ -1,7 +1,9 @@
 
-1) move files folder
+Batch work with one file
 
-2) separate files - "split -a 5 -l 4 #{jobParameters['inputFile']} #{jobParameters['stagingDirectory']}"
+1) move file folder
+
+2) split files - "split -a 5 -l 4 #{jobParameters['inputFile']} #{jobParameters['stagingDirectory']}"
 
 https://stackoverflow.com/questions/43500034/trying-to-split-files-using-systemcommandtasklet-execution-of-system-command-d
 
@@ -32,3 +34,19 @@ Where:
 2. n is the length of the Base64 String
 
 3. y will be 2 if Base64 ends with '==' and 1 if Base64 ends with '='.
+
+
+
+------------------------------------------------------------------------------------------------------------
+
+Link
+
+https://spring.io/blog/2021/01/27/spring-batch-on-kubernetes-efficient-batch-processing-at-scale
+
+https://docs.spring.io/spring-batch/docs/current/reference/html/spring-batch-integration.html#springBatchIntegration
+
+
+
+
+https://stackoverflow.com/questions/49636717/how-to-pass-arguments-to-a-job-resource-in-kubernetes
+

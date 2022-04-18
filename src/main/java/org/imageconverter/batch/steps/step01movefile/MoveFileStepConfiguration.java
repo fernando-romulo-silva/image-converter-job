@@ -1,4 +1,4 @@
-package org.imageconverter.batch.steps.step01movefiles;
+package org.imageconverter.batch.steps.step01movefile;
 
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class LoadFilesStepConfiguration {
+public class MoveFileStepConfiguration {
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;

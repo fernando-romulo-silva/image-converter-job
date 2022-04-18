@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 import org.imageconverter.infra.BatchSkipPolicy;
 import org.imageconverter.util.RecordSepartatorPolicy;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.BatchConfigurationException;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -43,7 +45,7 @@ public class BatchConfiguration {
 
     @Autowired
     private DataSource batchDataSource;
-    
+
     // -----------------------------------------------------------------------------------
     // Util
     // -----------------------------------------------------------------------------------
@@ -80,34 +82,38 @@ public class BatchConfiguration {
     }
 
     // -----------------------------------------------------------------------------------
-    // Step StepLoadFile
-    // -----------------------------------------------------------------------------------
-
-    // -----------------------------------------------------------------------------------
-    // Step StepProcessFile
-    // -----------------------------------------------------------------------------------
-    
-    // -----------------------------------------------------------------------------------
-    // Step StepFinalizeFile
-    // -----------------------------------------------------------------------------------    
-    
-    // -----------------------------------------------------------------------------------
     // Job Configuration
     // -----------------------------------------------------------------------------------
 
     @Bean
     public Job job( //
-		    final Step stepLoadFile, //
-		    final Step stepProcessFile, //
-		    final Step stepFinalizeFile) {
+		    final Step moveFileStep, //
+		    final Step splitFileStep, //
+		    final Step loadFilesStep, //
+		    final Step convertionStep, //
+		    final Step deleteSplitedStep, //
+		    final Step finalizeStep) {
 
 	return jobBuilderFactory.get("convertImageJob") //
 			.incrementer(new RunIdIncrementer()) //
-			.start(stepLoadFile) //
-			.next(stepProcessFile) //
-			.next(stepFinalizeFile) //
+			.start(moveFileStep) //
+			.next(splitFileStep) //
+			.next(loadFilesStep) //
+			.next(convertionStep) //
+			.next(deleteSplitedStep) //
+			.next(finalizeStep) //
 			.build();
     }
+    
+    @Bean
+    public JobParameters getJobParameters() {
+	final var jobParametersBuilder = new JobParametersBuilder();
+	    
+	jobParametersBuilder.addString("fileName", <dest_from_cmd_line);
+//	jobParametersBuilder.addDate("date", <date_from_cmd_line>);
+	return jobParametersBuilder.toJobParameters();
+    }
+    
 
     @Bean
     public JobRepository getJobRepository() {
@@ -123,7 +129,7 @@ public class BatchConfiguration {
 
 	    factoryBean.afterPropertiesSet();
 	    return factoryBean.getObject();
-	} catch (Exception ex) {
+	} catch (final Exception ex) {
 	    throw new BatchConfigurationException(ex);
 	}
     }

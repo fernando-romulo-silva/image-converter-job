@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Base64;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.batch.steps.step01movefile.MoveFileStepConfiguration;
@@ -33,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -45,8 +47,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 @ExtendWith(SpringExtension.class)
-// @DataJpaTest
-@DataJdbcTest
+@DataJpaTest
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
@@ -73,8 +74,8 @@ public class BatchExecutionTest {
     @Autowired
     private JobRepositoryTestUtils jobRepositoryTestUtils;
 
-//    @Autowired
-//    private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
     @Value("${application.input-files-folder}")
     private Resource inputResourceResource;
@@ -103,7 +104,7 @@ public class BatchExecutionTest {
 		final var imageFileName = file1.getName();
 		final var imageEncodedString = Base64.getEncoder().encodeToString(fileContent);
 
-		final var line = imageFileId + ";" + imageFileName + ";";
+		final var line = imageFileId + ";" + imageFileName + ";" + imageEncodedString;
 
 		writer.write(line);
 		writer.newLine();
@@ -121,7 +122,7 @@ public class BatchExecutionTest {
 
     @AfterEach
     void cleanUp() {
-	//jobRepositoryTestUtils.removeJobExecutions();
+	// jobRepositoryTestUtils.removeJobExecutions();
     }
 
     @Test

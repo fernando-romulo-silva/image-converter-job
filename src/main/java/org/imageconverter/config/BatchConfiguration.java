@@ -5,14 +5,15 @@ import javax.sql.DataSource;
 import org.imageconverter.infra.BatchSkipPolicy;
 import org.imageconverter.util.RecordSepartatorPolicy;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.BatchConfigurationException;
+import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.skip.SkipPolicy;
@@ -20,29 +21,27 @@ import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
 
-    @Value("${application.file-input}")
-    private Resource file;
-
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
+//    @Autowired
+//    private StepBuilderFactory stepBuilderFactory;
+//
+//    @Autowired
+//    private JpaTransactionManager jpaTransactionManager;
 
-    @Autowired
-    private JpaTransactionManager jpaTransactionManager;
-
+    @Qualifier(value = "batchDataSource")
     @Autowired
     private DataSource batchDataSource;
 
@@ -87,33 +86,34 @@ public class BatchConfiguration {
 
     @Bean
     public Job job( //
-		    final Step moveFileStep, //
-		    final Step splitFileStep, //
-		    final Step loadFilesStep, //
-		    final Step convertionStep, //
-		    final Step deleteSplitedStep, //
-		    final Step finalizeStep) {
+		    final Step moveFileStep //
+//		    final Step splitFileStep, //
+//		    final Step loadFilesStep, //
+//		    final Step convertionStep, //
+//		    final Step deleteSplitedStep, //
+//		    final Step finalizeStep
+
+    ) {
 
 	return jobBuilderFactory.get("convertImageJob") //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
-			.next(splitFileStep) //
-			.next(loadFilesStep) //
-			.next(convertionStep) //
-			.next(deleteSplitedStep) //
-			.next(finalizeStep) //
+//			.next(splitFileStep) //
+//			.next(loadFilesStep) //
+//			.next(convertionStep) //
+//			.next(deleteSplitedStep) //
+//			.next(finalizeStep) //
 			.build();
     }
-    
-    @Bean
-    public JobParameters getJobParameters() {
-	final var jobParametersBuilder = new JobParametersBuilder();
-	    
-	jobParametersBuilder.addString("fileName", <dest_from_cmd_line);
-//	jobParametersBuilder.addDate("date", <date_from_cmd_line>);
-	return jobParametersBuilder.toJobParameters();
-    }
-    
+
+//    @Bean
+//    public JobParameters getJobParameters() {
+//	final var jobParametersBuilder = new JobParametersBuilder();
+//	    
+//	jobParametersBuilder.addString("fileName", <dest_from_cmd_line);
+////	jobParametersBuilder.addDate("date", <date_from_cmd_line>);
+//	return jobParametersBuilder.toJobParameters();
+//    }
 
     @Bean
     public JobRepository getJobRepository() {
@@ -134,4 +134,22 @@ public class BatchConfiguration {
 	}
     }
 
+    @Bean
+    public JobLauncher createJobLauncher() throws Exception {
+	SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+	jobLauncher.setJobRepository(getJobRepository());
+	jobLauncher.afterPropertiesSet();
+	return jobLauncher;
+    }
+
+    @Bean
+    @Primary
+    public PlatformTransactionManager dataSourceTransactionManager() {
+	return new DataSourceTransactionManager(batchDataSource);
+    }
+
+    @Bean
+    public BatchConfigurer configurer() {
+	return new DefaultBatchConfigurer(batchDataSource);
+    }
 }

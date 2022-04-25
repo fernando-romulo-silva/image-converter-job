@@ -4,17 +4,17 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/input:${INPUT_FILE_FOLDER}
-     error-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/error:${ERROR_FILE_FOLDER}
-     processing-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/processing:${PROCESSING_FILE_FOLDER}
-     processed-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/processed:${PROCESSED_FILE_FOLDER}
+     input-files-folder: classpath:folders/input
+     error-files-folder: classpath:folders/error
+     processing-files-folder: classpath:folders/processing
+     processed-files-folder: classpath:folders/processed
      
 #============== image-converter-service ==============================================================
 image-converter-service:
     url: http://127.0.0.1:8080
     user : user
     password : password
-
+    
 #============== Data Source ===========================================================================
 spring: 
     sql.init:
@@ -38,3 +38,9 @@ spring:
                 show_sql: false
                 jdbc:
                     time_zone: GMT-3                
+                    
+#============== Batch ==============================================================================
+    batch:
+        jdbc.initialize-schema: never
+        # EMBEDDED always
+        # job.enabled: false

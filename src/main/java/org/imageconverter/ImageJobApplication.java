@@ -1,6 +1,7 @@
 package org.imageconverter;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -32,12 +33,13 @@ public class ImageJobApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-	// Pass the required Job Parameters from here to read it anywhere within
-	// Spring Batch infrastructure
-	JobParameters jobParameters = new JobParametersBuilder().addString("sourceDir", "C://inputLocation")
-			.addString("destinationDir", "C://outputLocation").toJobParameters();
+	// Pass the required Job Parameters from here to read it anywhere within Spring Batch infrastructure
+	
+	final var jobParameters = new JobParametersBuilder() //
+			.addString("fileName", "/home/fernando/Development/workspaces/eclipse-workspace/image-converter-job/target/test-classes/folders/input/2022-04-24_10-29_DBRGA.txt") //
+			.toJobParameters();
 
-	JobExecution execution = jobLauncher.run(job, jobParameters);
+	final var execution = jobLauncher.run(job, jobParameters);
 	System.out.println("STATUS :: " + execution.getStatus());
 
     }

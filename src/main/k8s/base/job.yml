@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metada:
+  name: image-converter-job # ${PROJECT_NAME}
+  namespace: general # ${PROJECT_NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-converter-service # ${PROJECT_NAME}
+  strategy:
+      rollingUpdate:
+         maxSurge: 50%   
+  template:
+    metadata:
+      labels:
+        app: image-converter-job # ${PROJECT_NAME}
+        cmdbname: gke # ${CLOUD}
+        commit: commit_branch # ${COMMIT_BRANCH}
+        project: image-converter-job # ${PROJECT_NAME}
+        squad: tech-infra # ${SQUAD}
+        type: support # ${TYPE}
+    spec:
+      containers:
+      - name: image-convert-job
+        image: IMAGE # ${DOCKER_IMAGE}:${APP_VERSION}
+        envFrom:
+        - configMapRef:
+            name: image-convert-job-configmap # ${PROJECT_NAME}-configmap
+        - secretRef:
+            name: image-convert-job-secrets # ${PROJECT_NAME}-secrets
+      imagePullSecrets:
+      - name: $SOME_ENV_VALUE
+      restartPolicy: Never            
+                        
+      resources:
+        requests: 
+          memory: 1Gi
+          cpu: 200m
+        limits:
+          memory: 2Gi
+          cpu: 500m          
+      volumes:
+      - name: my-secret-volume   
+        secret:
+          secretName: image-converter-job-account-volume # ${PROJECT_NAME}-account-volume     

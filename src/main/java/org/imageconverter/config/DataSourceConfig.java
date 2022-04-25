@@ -27,7 +27,7 @@ public class DataSourceConfig {
 	this.domainDataSourceMap = domainDataSourceMap;
     }
 
-    @Bean
+    @Bean(name = "batchDataSource")
     @BatchDataSource
     public DataSource batchDataSource() {
 	final var batchDataSource = new EmbeddedDatabaseBuilder() //

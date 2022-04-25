@@ -45,8 +45,7 @@ https://spring.io/blog/2021/01/27/spring-batch-on-kubernetes-efficient-batch-pro
 
 https://docs.spring.io/spring-batch/docs/current/reference/html/spring-batch-integration.html#springBatchIntegration
 
-
-
+https://github.com/dbalthassat/spring-batch-poc/blob/master/src/main/java/org/dbalthassat/FileMovingTasklet.java
 
 https://stackoverflow.com/questions/49636717/how-to-pass-arguments-to-a-job-resource-in-kubernetes
 

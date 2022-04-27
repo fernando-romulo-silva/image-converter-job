@@ -4,10 +4,14 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/input:${INPUT_FILE_FOLDER}
-     error-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/error:${ERROR_FILE_FOLDER}
-     processing-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/processing:${PROCESSING_FILE_FOLDER}
-     processed-files-folder: ${sys:user.home}/Temp/image-converter-job/folders/processed:${PROCESSED_FILE_FOLDER}
+     #:${INPUT_FILE_FOLDER}
+     input-files-folder: ${user.home}/Temp/image-converter-job/folders/input
+     #:${ERROR_FILE_FOLDER}
+     error-files-folder: ${user.home}/Temp/image-converter-job/folders/error
+     #:${PROCESSING_FILE_FOLDER}
+     processing-files-folder: ${user.home}/Temp/image-converter-job/folders/processing
+     #:${PROCESSED_FILE_FOLDER}
+     processed-files-folder: ${user.home}/Temp/image-converter-job/folders/processed
      
 #============== image-converter-service ==============================================================
 image-converter-service:

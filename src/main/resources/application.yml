@@ -24,6 +24,7 @@ spring:
     batch:
         jdbc.initialize-schema: never
         # always, embedded and never
+        job.enabled: false
         
 #============== Data Source ===========================================================================
     datasource:
@@ -57,6 +58,6 @@ spring:
                     sharedCache:
                         mode: ENABLE_SELECTIVE
                         
-#============ Loggin =======================================================================================
-logging.level.root: DEBUG
+#============ Logging =======================================================================================
+# logging.level.root: DEBUG
 

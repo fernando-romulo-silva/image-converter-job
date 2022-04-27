@@ -12,8 +12,8 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.imageconverter.batch.steps.step01movefile.MoveFileStepConfiguration;
-import org.imageconverter.batch.steps.step01movefile.MoveFileTasklet;
+import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
+import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -59,12 +59,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
-
-//@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:/org/springframework/batch/core/schema-hsqldb.sql" })
-//@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-
 //
-
 @TestInstance(Lifecycle.PER_CLASS)
 public class BatchExecutionTest {
 
@@ -112,7 +107,6 @@ public class BatchExecutionTest {
 		i++;
 	    }
 	}
-
     }
 
     @AfterAll

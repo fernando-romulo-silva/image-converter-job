@@ -196,13 +196,14 @@
 			<version>4.0</version>
 			<scope>test</scope>
 		</dependency>
+		
 
 	</dependencies>
 
 	<build>
 
 		<extensions>
-			<!-- Plugin Configs -->
+			<!-- Plugin configs -->
 			<extension>
 				<groupId>org.default.extensions</groupId>
 				<artifactId>default-extensions</artifactId>
@@ -214,12 +215,56 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
 					<rulesets>
-						<ruleset>default-extensions-pmd-rulesets.xml</ruleset>
+						<ruleset>default-extensions/pmd/java/pmd-ruleset.xml</ruleset>
 					</rulesets>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<configuration>
+					<excludeBugsFile>default-extensions/spotbugs/spotbugs-excludes.xml</excludeBugsFile>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<!--
+				<configuration>
+					<configLocation>default-extensions/checkstyle/checkstyle-checks.xml</configLocation>
+					<suppressionsLocation>default-extensions/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+				</configuration>
+				-->
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 
 			<plugin>
@@ -227,12 +272,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
 				<configuration>
-					<jvmArguments>${project.argLine}</jvmArguments>
 					<mainClass>org.imageconverter.ImageJobApplication</mainClass>
 					<layers>
 						<enabled>true</enabled>
 						<includeLayerTools>true</includeLayerTools>
-						<configuration>${project.basedir}/src/layers.xml</configuration>
+						<configuration>${project.basedir}/src/main/resources/layers.xml</configuration>
 					</layers>
 				</configuration>
 				<executions>
@@ -245,7 +289,68 @@
 			</plugin>
 
 		</plugins>
-
 	</build>
+
+	<reporting>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<rulesets>
+						<!-- <ruleset>rulesets/java/quickstart.xml</ruleset> -->
+						<ruleset>default-extensions/pmd/java/pmd-ruleset.xml</ruleset>
+					</rulesets>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<configuration>
+					<excludeFilterFile>default-extensions/spotbugs/spotbugs-excludes.xml</excludeFilterFile>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+
+		</plugins>
+
+	</reporting>
 
 </project>

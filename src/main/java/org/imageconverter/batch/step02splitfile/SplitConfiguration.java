@@ -1,4 +1,4 @@
-package org.imageconverter.batch.steps.step02splitfile;
+package org.imageconverter.batch.step02splitfile;
 
 import java.io.File;
 

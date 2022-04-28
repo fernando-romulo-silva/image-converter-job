@@ -13,6 +13,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,19 +22,19 @@ public class MoveFileTasklet implements Tasklet {
 
     private final String fileName;
 
-    private final String inputFolder;
+    private final Resource inputFolder;
 
-    private final String processingFolder;
+    private final Resource processingFolder;
 
     MoveFileTasklet(//
 		    @Value("#{jobParameters['fileName']}") //
 		    final String newFileName, //
 		    //
 		    @Value("${application.input-files-folder}") //
-		    final String newInputFolder,
+		    final Resource newInputFolder,
 		    //
 		    @Value("${application.processing-files-folder}") //
-		    final String newProcessingFolder) {
+		    final Resource newProcessingFolder) {
 	super();
 	this.fileName = newFileName;
 	this.inputFolder = newInputFolder;
@@ -43,9 +44,12 @@ public class MoveFileTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(final StepContribution stepContribution, final ChunkContext chunkContext) throws IOException {
 
+	final var inputFolderAbsolutePath = inputFolder.getFile().getAbsolutePath();
+	final var processingAbsolutePath = processingFolder.getFile().getAbsolutePath();
+
 	Files.move(//
-			Paths.get(inputFolder + File.separator + fileName), //
-			Paths.get(processingFolder + File.separator + fileName), //
+			Paths.get(inputFolderAbsolutePath + File.separator + fileName), //
+			Paths.get(processingAbsolutePath + File.separator + fileName), //
 			REPLACE_EXISTING //
 	);
 

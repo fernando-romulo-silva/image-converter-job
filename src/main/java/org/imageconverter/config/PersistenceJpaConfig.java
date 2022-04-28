@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -23,7 +24,12 @@ public class PersistenceJpaConfig {
     private final Map<String, String> domainJpaMap;
 
     @Autowired
-    public PersistenceJpaConfig(final DataSource domainDataSource, final Map<String, String> domainJpaMap) {
+    PersistenceJpaConfig( //
+		    @Qualifier("domainDataSource") //
+		    final DataSource domainDataSource, //
+		    //
+		    @Qualifier("domainJpaMap") //
+		    final Map<String, String> domainJpaMap) {
 	super();
 	this.domainDataSource = domainDataSource;
 	this.domainJpaMap = domainJpaMap;

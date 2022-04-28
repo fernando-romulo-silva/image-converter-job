@@ -121,6 +121,7 @@ public class BatchExecutionTest {
     @AfterEach
     void cleanUp() {
 	jobRepositoryTestUtils.removeJobExecutions();
+	jobLauncherTestUtils.getJobRepository();
     }
 
     @Test

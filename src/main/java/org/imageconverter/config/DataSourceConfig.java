@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,7 +23,7 @@ public class DataSourceConfig {
     private final Map<String, String> domainDataSourceMap;
 
     @Autowired
-    public DataSourceConfig(final Map<String, String> domainDataSourceMap) {
+    public DataSourceConfig(@Qualifier("domainDataSourceMap") final Map<String, String> domainDataSourceMap) {
 	super();
 	this.domainDataSourceMap = domainDataSourceMap;
     }
@@ -42,7 +43,7 @@ public class DataSourceConfig {
     }
 
     @Primary
-    @Bean
+    @Bean(name = "domainDataSource")
     @ConfigurationProperties("spring.datasource")
     public DataSource domainDataSource(final DataSourceProperties properties) {
 

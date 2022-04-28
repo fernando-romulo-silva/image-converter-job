@@ -8,14 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BatchApplicationRunner implements CommandLineRunner { // implements ApplicationRunner {
+public class BatchCommandLineRunner implements CommandLineRunner { // implements ApplicationRunner {
 
     private final JobLauncher jobLauncher;
 
     private final Job job;
 
     @Autowired
-    BatchApplicationRunner(final JobLauncher jobLauncher, final Job job) {
+    BatchCommandLineRunner(final JobLauncher jobLauncher, final Job job) {
 	super();
 	this.jobLauncher = jobLauncher;
 	this.job = job;

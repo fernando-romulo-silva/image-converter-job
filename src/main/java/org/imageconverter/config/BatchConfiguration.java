@@ -32,8 +32,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableBatchProcessing
 public class BatchConfiguration {
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+    private final JobBuilderFactory jobBuilderFactory;
 
 //    @Autowired
 //    private StepBuilderFactory stepBuilderFactory;
@@ -41,9 +40,19 @@ public class BatchConfiguration {
 //    @Autowired
 //    private JpaTransactionManager jpaTransactionManager;
 
-    @Qualifier(value = "batchDataSource")
-    @Autowired
-    private DataSource batchDataSource;
+    private final DataSource batchDataSource;
+
+    @Autowired //
+    BatchConfiguration(
+		    //
+		    final JobBuilderFactory jobBuilderFactory,
+		    //
+		    @Qualifier("batchDataSource") //
+		    final DataSource batchDataSource) {
+	super();
+	this.jobBuilderFactory = jobBuilderFactory;
+	this.batchDataSource = batchDataSource;
+    }
 
     // -----------------------------------------------------------------------------------
     // Util

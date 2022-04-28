@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
@@ -78,10 +80,12 @@ public class BatchExecutionTest {
     @Value("classpath:images/*.png")
     private Resource[] images;
 
+    private final String fileName = "2022-04-24_10-29_DBRGA.txt";
+    
+    
     @BeforeAll
     void beforeAll() throws IOException {
 
-	final var fileName = "2022-04-24_10-29_DBRGA.txt";
 
 	int i = 1;
 
@@ -116,14 +120,14 @@ public class BatchExecutionTest {
 
     @AfterEach
     void cleanUp() {
-	// jobRepositoryTestUtils.removeJobExecutions();
+	jobRepositoryTestUtils.removeJobExecutions();
     }
 
     @Test
     @Order(1)
     void executeJobTest() throws Exception {
 
-	final var jobExecution = jobLauncherTestUtils.launchJob();
+	final var jobExecution = jobLauncherTestUtils.launchJob(defaultJobParameters());
 
 	final var actualJobInstance = jobExecution.getJobInstance();
 
@@ -157,6 +161,11 @@ public class BatchExecutionTest {
 //	    assertThat(idCode).containsAll(idCodesT);
 //
 //	}
+    }
 
+    private JobParameters defaultJobParameters() {
+	final var paramsBuilder = new JobParametersBuilder();
+	paramsBuilder.addString("fileName", fileName);
+	return paramsBuilder.toJobParameters();
     }
 }

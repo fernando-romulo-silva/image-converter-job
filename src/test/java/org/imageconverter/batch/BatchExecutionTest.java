@@ -105,12 +105,12 @@ public class BatchExecutionTest {
 
 	    for (final var resource : images) {
 
-		final var file1 = resource.getFile();
+		final var file = resource.getFile();
 
-		final var fileContent = FileUtils.readFileToByteArray(file1);
+		final var fileContent = FileUtils.readFileToByteArray(file);
 
 		final var imageFileId = i;
-		final var imageFileName = file1.getName();
+		final var imageFileName = file.getName();
 		final var imageEncodedString = Base64.getEncoder().encodeToString(fileContent);
 
 		final var line = imageFileId + ";" + imageFileName + ";" + imageEncodedString;

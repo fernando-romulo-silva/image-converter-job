@@ -35,7 +35,7 @@ public class PersistenceJpaConfig {
 	this.domainJpaMap = domainJpaMap;
     }
 
-    @Bean
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 	final var emf = new LocalContainerEntityManagerFactoryBean();
 	emf.setDataSource(domainDataSource);
@@ -51,8 +51,8 @@ public class PersistenceJpaConfig {
 	return emf;
     }
 
-    @Bean
     @Primary
+    @Bean(name = "jpaTransactionManger")
     public JpaTransactionManager jpaTransactionManger() {
 	final var tm = new JpaTransactionManager();
 	tm.setDataSource(domainDataSource);

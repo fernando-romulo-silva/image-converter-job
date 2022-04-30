@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -41,6 +40,8 @@ public class BatchConfiguration {
 //    private JpaTransactionManager jpaTransactionManager;
 
     private final DataSource batchDataSource;
+    
+    
 
     @Autowired //
     BatchConfiguration(
@@ -125,12 +126,15 @@ public class BatchConfiguration {
 //    }
 
     @Bean
-    public JobRepository getJobRepository() {
+    public JobRepository getJobRepository(
+		    @Qualifier("batchPlatformTransactionManager")
+		    final PlatformTransactionManager batchPlatformTransactionManager
+		    ) {
 
 	final var factoryBean = new JobRepositoryFactoryBean();
 
 	factoryBean.setDataSource(batchDataSource);
-	factoryBean.setTransactionManager(new DataSourceTransactionManager(batchDataSource));
+	factoryBean.setTransactionManager(batchPlatformTransactionManager);
 	factoryBean.setTablePrefix("BATCH_");
 	factoryBean.setIsolationLevelForCreate("PROPAGATION_REQUIRED");
 
@@ -144,16 +148,16 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JobLauncher createJobLauncher() throws Exception {
+    public JobLauncher createJobLauncher(final JobRepository jobRepository) throws Exception {
 	SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-	jobLauncher.setJobRepository(getJobRepository());
+	jobLauncher.setJobRepository(jobRepository);
 	jobLauncher.afterPropertiesSet();
 	return jobLauncher;
     }
 
-    @Bean
-    @Primary
-    public PlatformTransactionManager dataSourceTransactionManager() {
+    @Bean(name = "batchPlatformTransactionManager")
+//    @Primary
+    public PlatformTransactionManager batchPlatformTransactionManager() {
 	return new DataSourceTransactionManager(batchDataSource);
     }
 

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,11 +30,13 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -68,8 +71,15 @@ public class BatchExecutionTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Autowired
+//    @Autowired
     private JobRepositoryTestUtils jobRepositoryTestUtils;
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Qualifier("batchDataSource")
+    @Autowired
+    private DataSource batchDataSource;
 
     @Autowired
     private EntityManager entityManager;
@@ -81,11 +91,11 @@ public class BatchExecutionTest {
     private Resource[] images;
 
     private final String fileName = "2022-04-24_10-29_DBRGA.txt";
-    
-    
+
     @BeforeAll
     void beforeAll() throws IOException {
 
+	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
 	int i = 1;
 
@@ -121,22 +131,24 @@ public class BatchExecutionTest {
     @AfterEach
     void cleanUp() {
 	jobRepositoryTestUtils.removeJobExecutions();
-	jobLauncherTestUtils.getJobRepository();
     }
 
     @Test
     @Order(1)
     void executeJobTest() throws Exception {
 
+	// given
+	final var expectedJobName = "convertImageJob";
+	final var expectedJobStatus = "COMPLETED";
+
+	// when
 	final var jobExecution = jobLauncherTestUtils.launchJob(defaultJobParameters());
-
 	final var actualJobInstance = jobExecution.getJobInstance();
-
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
-	assertThat(actualJobInstance.getJobName()).isEqualTo("convertImageJob");
-
-	assertThat(actualJobExitStatus.getExitCode()).isEqualTo("COMPLETED");
+	// then
+	assertThat(actualJobInstance.getJobName()).isEqualTo(expectedJobName);
+	assertThat(actualJobExitStatus.getExitCode()).isEqualTo(expectedJobStatus);
     }
 
     @Test
@@ -169,4 +181,5 @@ public class BatchExecutionTest {
 	paramsBuilder.addString("fileName", fileName);
 	return paramsBuilder.toJobParameters();
     }
+
 }

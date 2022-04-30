@@ -24,6 +24,7 @@ https://stackoverflow.com/questions/43500034/trying-to-split-files-using-systemc
 
 
 
+
 You can calculate the file size (in bytes) using below formula:
 
 x = (n * (3/4)) - y

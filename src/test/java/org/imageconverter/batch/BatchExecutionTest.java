@@ -99,7 +99,7 @@ public class BatchExecutionTest {
 
 	int i = 1;
 
-	final var filePath = StringUtils.remove(inputResourceResource.getURI() + File.separator + fileName, "file:");
+	final var filePath = inputResourceResource.getFile().getAbsolutePath() + File.separator + fileName;
 
 	try (final var writer = new BufferedWriter(new FileWriter(filePath, false))) {
 

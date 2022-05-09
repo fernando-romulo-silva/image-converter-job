@@ -40,8 +40,6 @@ public class BatchConfiguration {
 //    private JpaTransactionManager jpaTransactionManager;
 
     private final DataSource batchDataSource;
-    
-    
 
     @Autowired //
     BatchConfiguration(
@@ -96,8 +94,8 @@ public class BatchConfiguration {
 
     @Bean
     public Job job( //
-		    final Step moveFileStep //
-//		    final Step splitFileStep, //
+		    final Step moveFileStep, //
+		    final Step splitFileStep //
 //		    final Step loadFilesStep, //
 //		    final Step convertionStep, //
 //		    final Step deleteSplitedStep, //
@@ -108,7 +106,7 @@ public class BatchConfiguration {
 	return jobBuilderFactory.get("convertImageJob") //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
-//			.next(splitFileStep) //
+			.next(splitFileStep) //
 //			.next(loadFilesStep) //
 //			.next(convertionStep) //
 //			.next(deleteSplitedStep) //
@@ -126,10 +124,9 @@ public class BatchConfiguration {
 //    }
 
     @Bean
-    public JobRepository getJobRepository(
-		    @Qualifier("batchPlatformTransactionManager")
-		    final PlatformTransactionManager batchPlatformTransactionManager
-		    ) {
+    public JobRepository getJobRepository( //
+		    @Qualifier("batchPlatformTransactionManager") //
+		    final PlatformTransactionManager batchPlatformTransactionManager) {
 
 	final var factoryBean = new JobRepositoryFactoryBean();
 

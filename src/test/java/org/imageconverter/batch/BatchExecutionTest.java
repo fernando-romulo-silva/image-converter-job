@@ -12,9 +12,10 @@ import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
+import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
+import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -56,8 +57,9 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
-			MoveFileStepConfiguration.class, MoveFileTasklet.class //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Conigs
+			MoveFileStepConfiguration.class, MoveFileTasklet.class, // First Step
+			SplitFileStepConfiguration.class, SplitFileTasklet.class // Second Step
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

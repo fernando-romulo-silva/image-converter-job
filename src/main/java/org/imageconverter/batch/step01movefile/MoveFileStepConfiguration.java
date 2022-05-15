@@ -19,10 +19,10 @@ public class MoveFileStepConfiguration {
     }
 
     @Bean
-    public Step moveFileStep(final Tasklet moveFileTasklet) {
+    Step moveFileStep(final Tasklet moveFileTasklet, final MoveFileStepLoggingListener moveFileStepLoggingListener) {
 
 	return this.stepBuilderFactory.get("moveFileStep") //
-//			.transactionManager(transactionManager) //
+			.listener(moveFileStepLoggingListener) //
 			.tasklet(moveFileTasklet) //
 			.build();
     }

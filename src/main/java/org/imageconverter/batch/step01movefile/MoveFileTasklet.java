@@ -44,12 +44,12 @@ public class MoveFileTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(final StepContribution stepContribution, final ChunkContext chunkContext) throws IOException {
 
-	final var inputFolderAbsolutePath = inputFolder.getFile().getAbsolutePath();
-	final var processingAbsolutePath = processingFolder.getFile().getAbsolutePath();
+	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
+	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
 
 	Files.move(//
-			Paths.get(inputFolderAbsolutePath + File.separator + fileName), //
-			Paths.get(processingAbsolutePath + File.separator + fileName), //
+			Paths.get(inputFolderAbsolutePath.toString() + File.separator + fileName), //
+			Paths.get(processingAbsolutePath.toString() + File.separator + fileName), //
 			REPLACE_EXISTING //
 	);
 

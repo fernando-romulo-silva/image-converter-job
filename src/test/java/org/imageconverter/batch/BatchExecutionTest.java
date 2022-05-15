@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
+import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
 import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
@@ -57,8 +58,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Conigs
-			MoveFileStepConfiguration.class, MoveFileTasklet.class, // First Step
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
+			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
 			SplitFileStepConfiguration.class, SplitFileTasklet.class // Second Step
 		} //
 )

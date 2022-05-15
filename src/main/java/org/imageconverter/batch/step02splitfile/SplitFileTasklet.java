@@ -35,13 +35,15 @@ public class SplitFileTasklet extends SystemCommandTasklet {
     private void addCommand() throws IOException {
 
 	// split -l 200000 filename
-	// split -l 2 -a5 -d --additional-suffix=.txt 2022-04-24_10-29_DBRGA.txt 2022-04-24_10-29_DBRGA
+	// split -l 2 -a5 -d --additional-suffix=.txt filename.txt filename
 
 	final var processingAbsolutePath = processingFolder.getFile().getAbsolutePath();
 	final var linesSize = 2;
 	final var prefixFile = StringUtils.substringBefore(fileName, ".");
 
-	setCommand("split -l " + linesSize + " -a5 -d --additional-suffix=.txt " + processingAbsolutePath + File.separator + fileName + " " + prefixFile);
+	final var command = "split -l " + linesSize + " -a5 -d --additional-suffix=.txt " + processingAbsolutePath + File.separator + fileName + " " + processingAbsolutePath + File.separator + prefixFile;
+	
+	setCommand(command);
 	setTimeout(5000);
     }
 }

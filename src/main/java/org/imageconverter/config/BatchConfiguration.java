@@ -54,41 +54,6 @@ public class BatchConfiguration {
     }
 
     // -----------------------------------------------------------------------------------
-    // Util
-    // -----------------------------------------------------------------------------------
-
-    @Bean
-    public SkipPolicy fileVerificationSkipper() {
-	return new BatchSkipPolicy();
-    }
-
-    @Bean
-    public SimpleRecordSeparatorPolicy blankLineRecordSeparatorPolicy() {
-	return new RecordSepartatorPolicy();
-    }
-
-    @Bean
-    public FixedLengthTokenizer fixedLengthTokenizer() {
-	final var tokenizer = new FixedLengthTokenizer();
-
-	tokenizer.setNames( //
-			"id", //
-			"fileName", //
-			"image" //
-	);
-
-	tokenizer.setColumns( //
-			new Range(1, 10), //
-			new Range(12, 22), //
-			new Range(24, 1000) //
-	);
-
-	tokenizer.setStrict(false);
-
-	return tokenizer;
-    }
-
-    // -----------------------------------------------------------------------------------
     // Job Configuration
     // -----------------------------------------------------------------------------------
 

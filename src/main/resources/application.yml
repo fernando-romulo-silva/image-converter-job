@@ -4,10 +4,10 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: ${INPUT_FILE_FOLDER}
-     error-files-folder: ${ERROR_FILE_FOLDER}
-     processing-files-folder: ${PROCESSING_FILE_FOLDER}
-     processed-files-folder: ${PROCESSED_FILE_FOLDER}
+     input-files-folder: file:${INPUT_FILE_FOLDER}
+     error-files-folder: file:${ERROR_FILE_FOLDER}
+     processing-files-folder: file:${PROCESSING_FILE_FOLDER}
+     processed-files-folder: file:${PROCESSED_FILE_FOLDER}
 
 #============== image-converter-service ==============================================================
 image-converter-service:

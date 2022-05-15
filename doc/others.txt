@@ -3,10 +3,10 @@ Batch work with one file
 
 1) move file folder
 
-2) split files - "split -a 5 -l 4 #{jobParameters['inputFile']} #{jobParameters['stagingDirectory']}"
-
-https://stackoverflow.com/questions/43500034/trying-to-split-files-using-systemcommandtasklet-execution-of-system-command-d
-
+2) split files
+   -> check line size
+   ----> if 0 don't split
+   ----> else slipt it
 
 3) load files
    -> check image size

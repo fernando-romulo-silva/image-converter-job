@@ -2,16 +2,8 @@ package org.imageconverter.batch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Base64;
 
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-
-import org.apache.commons.io.FileUtils;
 import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
 import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
@@ -30,20 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.core.io.Resource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -69,61 +53,14 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class BatchExecutionTest {
-
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
-
-//    @Autowired
-    private JobRepositoryTestUtils jobRepositoryTestUtils;
-
-    @Autowired
-    private JobRepository jobRepository;
-
-    @Qualifier("batchDataSource")
-    @Autowired
-    private DataSource batchDataSource;
-
-    @Autowired
-    private EntityManager entityManager;
-
-    @Value("${application.input-files-folder}")
-    private Resource inputResourceResource;
-
-    @Value("classpath:images/*.png")
-    private Resource[] images;
-
-    private final String fileName = "2022-04-24_10-29_DBRGA.txt";
+public class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
 
     @BeforeAll
     void beforeAll() throws IOException {
 
-	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-
-	int i = 1;
-
-	final var filePath = inputResourceResource.getFile().getAbsolutePath() + File.separator + fileName;
-
-	try (final var writer = new BufferedWriter(new FileWriter(filePath, false))) {
-
-	    for (final var resource : images) {
-
-		final var file = resource.getFile();
-
-		final var fileContent = FileUtils.readFileToByteArray(file);
-
-		final var imageFileId = i;
-		final var imageFileName = file.getName();
-		final var imageEncodedString = Base64.getEncoder().encodeToString(fileContent);
-
-		final var line = imageFileId + ";" + imageFileName + ";" + imageEncodedString;
-
-		writer.write(line);
-		writer.newLine();
-
-		i++;
-	    }
-	}
+	this.jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+	
+	createBatchFile();
     }
 
     @AfterAll
@@ -158,6 +95,11 @@ public class BatchExecutionTest {
     @Disabled
     @Order(2)
     void checkValueTest() throws Exception {
+
+	// given
+//	    FileSystemResource expectedResult = new FileSystemResource(EXPECTED_OUTPUT);
+//	    FileSystemResource actualResult = new FileSystemResource(TEST_OUTPUT);
+
 //	jobLauncherTestUtils.launchJob();
 //
 //	final var idCode = entityManager//
@@ -177,12 +119,6 @@ public class BatchExecutionTest {
 //	    assertThat(idCode).containsAll(idCodesT);
 //
 //	}
-    }
-
-    private JobParameters defaultJobParameters() {
-	final var paramsBuilder = new JobParametersBuilder();
-	paramsBuilder.addString("fileName", fileName);
-	return paramsBuilder.toJobParameters();
     }
 
 }

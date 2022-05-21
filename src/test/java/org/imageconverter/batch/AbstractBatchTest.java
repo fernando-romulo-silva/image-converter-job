@@ -1,7 +1,8 @@
 package org.imageconverter.batch;
 
+import static java.io.File.separator;
+
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Base64;
@@ -38,8 +39,17 @@ abstract class AbstractBatchTest {
     @Autowired
     protected EntityManager entityManager;
 
-    @Value("${application.input-files-folder}")
-    protected Resource inputResourceResource;
+    @Value("${application.batch-folders.input-files}")
+    protected Resource inputFolder;
+
+    @Value("${application.batch-folders.processing-files}") //
+    protected Resource processingFolder;
+
+    @Value("${application.batch-folders.error-files}") //
+    protected Resource errorFolder;
+
+    @Value("${application.batch-folders.processed-files}") //
+    protected Resource processedFolder;
 
     @Value("classpath:images/*.png")
     protected Resource[] images;
@@ -49,7 +59,7 @@ abstract class AbstractBatchTest {
     protected void createBatchFile() throws IOException {
 	int i = 1;
 
-	final var filePath = inputResourceResource.getFile().getAbsolutePath() + File.separator + fileName;
+	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
 
 	try (final var writer = new BufferedWriter(new FileWriter(filePath, false))) {
 
@@ -71,6 +81,13 @@ abstract class AbstractBatchTest {
 		i++;
 	    }
 	}
+    }
+
+    protected void cleanFolders() throws IOException {
+	FileUtils.cleanDirectory(inputFolder.getFile());
+	FileUtils.cleanDirectory(processingFolder.getFile());
+	FileUtils.cleanDirectory(errorFolder.getFile());
+	FileUtils.cleanDirectory(processedFolder.getFile());
     }
 
     protected JobParameters defaultJobParameters() {

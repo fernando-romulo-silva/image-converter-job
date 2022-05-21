@@ -4,16 +4,18 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: file:${INPUT_FILE_FOLDER}
-     error-files-folder: file:${ERROR_FILE_FOLDER}
-     processing-files-folder: file:${PROCESSING_FILE_FOLDER}
-     processed-files-folder: file:${PROCESSED_FILE_FOLDER}
-
-#============== image-converter-service ==============================================================
-image-converter-service:
-    url: ${IMAGE_CONVERTER_SERVER_URL}
-    user : ${IMAGE_CONVERTER_SERVER_USER}
-    password : ${IMAGE_CONVERTER_SERVER_PASSWORD}
+    image-converter-service:
+        url: ${IMAGE_CONVERTER_SERVER_URL}
+        user : ${IMAGE_CONVERTER_SERVER_USER}
+        password : ${IMAGE_CONVERTER_SERVER_PASSWORD}
+            
+    batch-folders:
+        input-files: file:${INPUT_FILE_FOLDER}
+        error-files: file:${ERROR_FILE_FOLDER}
+        processing-files: file:${PROCESSING_FILE_FOLDER}
+        processed-files: file:${PROCESSED_FILE_FOLDER}
+   
+    split-file-size: ${SPLIT_FILE_SIZE}        
 
 #============== Spring ==============================================================================
 spring:

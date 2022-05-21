@@ -4,16 +4,19 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: classpath:folders/input
-     error-files-folder: classpath:folders/error
-     processing-files-folder: classpath:folders/processing
-     processed-files-folder: classpath:folders/processed
-     
-#============== image-converter-service ==============================================================
-image-converter-service:
-    url: http://127.0.0.1:8080
-    user : user
-    password : password
+    image-converter-service:
+        url: http://127.0.0.1:8989 
+        user : user
+        password : password
+            
+    batch-folders:
+        input-files: classpath:folders/input
+        error-files: classpath:folders/error
+        processing-files: classpath:folders/processing
+        processed-files: classpath:folders/processed
+   
+    split-file-size: 2      
+    
     
 #============== Data Source ===========================================================================
 spring: 

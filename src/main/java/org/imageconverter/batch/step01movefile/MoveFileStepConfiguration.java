@@ -1,5 +1,7 @@
 package org.imageconverter.batch.step01movefile;
 
+import static org.imageconverter.config.BatchConfiguration.MOVE_FILE_STEP;
+
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -21,7 +23,7 @@ public class MoveFileStepConfiguration {
     @Bean
     Step moveFileStep(final Tasklet moveFileTasklet, final MoveFileStepLoggingListener moveFileStepLoggingListener) {
 
-	return this.stepBuilderFactory.get("moveFileStep") //
+	return this.stepBuilderFactory.get(MOVE_FILE_STEP) //
 			.listener(moveFileStepLoggingListener) //
 			.tasklet(moveFileTasklet) //
 			.build();

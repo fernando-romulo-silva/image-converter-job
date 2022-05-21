@@ -4,17 +4,19 @@
 #
 #============== Applicaton ===========================================================================
 application:
-     input-files-folder: file:${user.home}/Temp/image-converter-job/folders/input
-     error-files-folder: file:${user.home}/Temp/image-converter-job/folders/error
-     processing-files-folder: file:${user.home}/Temp/image-converter-job/folders/processing
-     processed-files-folder: file:{user.home}/Temp/image-converter-job/folders/processed
+    image-converter-service:
+        url: http://127.0.0.1:8080
+        user : user
+        password : password
+            
+    batch-folders:
+        input-files: file:${user.home}/Temp/image-converter-job/folders/input
+        error-files: file:${user.home}/Temp/image-converter-job/folders/error
+        processing-files: file:${user.home}/Temp/image-converter-job/folders/processing
+        processed-files: file:{user.home}/Temp/image-converter-job/folders/processed
+   
+    split-file-size: 4        
      
-#============== image-converter-service ==============================================================
-image-converter-service:
-    url: http://127.0.0.1:8080
-    user : user
-    password : password
-
 #============== Data Source ===========================================================================
 spring: 
     sql.init:

@@ -22,7 +22,7 @@ public class SplitFileTasklet extends SystemCommandTasklet {
 		    @Value("#{jobParameters['fileName']}") //
 		    final String newFileName, //
 		    //
-		    @Value("${application.processing-files-folder}") //
+		    @Value("${application.batch-folders.processing-files}") //
 		    final Resource newProcessingFolder) throws IOException {
 	super();
 

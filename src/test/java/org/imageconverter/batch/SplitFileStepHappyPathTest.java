@@ -3,15 +3,14 @@ package org.imageconverter.batch;
 import static java.io.File.separator;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.imageconverter.config.BatchConfiguration.MOVE_FILE_STEP;
+import static org.imageconverter.config.BatchConfiguration.*;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
-import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
-import org.imageconverter.batch.step01movefile.MoveFileTasklet;
+import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
+import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -45,7 +44,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class // First Step
+			SplitFileTasklet.class, SplitFileStepConfiguration.class // Second Step
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -54,8 +53,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-class MoveFileStepHappyPathTest extends AbstractBatchTest {
-
+class SplitFileStepHappyPathTest extends AbstractBatchTest {
+    
     @BeforeAll
     void beforeAll() throws IOException {
 
@@ -71,7 +70,7 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 
     @Test
     @Order(1)
-    void executeMoveFileStep() throws Exception {
+    void executeSplitFileStep() throws Exception {
 
 	// given
 	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
@@ -84,7 +83,7 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 	assertThat(expectedFileLocation.exists()).isFalse();
 
 	// when
-	final var jobExecution = jobLauncherTestUtils.launchStep(MOVE_FILE_STEP, defaultJobParameters());
+	final var jobExecution = jobLauncherTestUtils.launchStep(SPLIT_FILE_STEP, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 

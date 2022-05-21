@@ -1,6 +1,8 @@
 package org.imageconverter.batch;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.imageconverter.config.BatchConfiguration.CONVERT_IMAGE_JOB;
+import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
 
@@ -53,19 +55,19 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
+class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
 
     @BeforeAll
     void beforeAll() throws IOException {
 
-	this.jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-	
+	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+
 	createBatchFile();
     }
 
     @AfterAll
-    void afterAll() {
-
+    void afterAll() throws IOException {
+	cleanFolders();
     }
 
     @AfterEach
@@ -78,8 +80,8 @@ public class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
     void executeJobTest() throws Exception {
 
 	// given
-	final var expectedJobName = "convertImageJob";
-	final var expectedJobStatus = "COMPLETED";
+	final var expectedJobName = CONVERT_IMAGE_JOB;
+	final var expectedJobStatus = COMPLETED.getExitCode();
 
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchJob(defaultJobParameters());

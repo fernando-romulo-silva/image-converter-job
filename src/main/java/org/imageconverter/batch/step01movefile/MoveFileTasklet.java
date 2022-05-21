@@ -30,10 +30,10 @@ public class MoveFileTasklet implements Tasklet {
 		    @Value("#{jobParameters['fileName']}") //
 		    final String newFileName, //
 		    //
-		    @Value("${application.input-files-folder}") //
+		    @Value("${application.batch-folders.input-files}") //
 		    final Resource newInputFolder,
 		    //
-		    @Value("${application.processing-files-folder}") //
+		    @Value("${application.batch-folders.processing-files}") //
 		    final Resource newProcessingFolder) {
 	super();
 	this.fileName = newFileName;

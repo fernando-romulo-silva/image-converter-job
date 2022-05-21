@@ -2,8 +2,6 @@ package org.imageconverter.config;
 
 import javax.sql.DataSource;
 
-import org.imageconverter.infra.BatchSkipPolicy;
-import org.imageconverter.util.RecordSepartatorPolicy;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.BatchConfigurationException;
@@ -16,10 +14,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
-import org.springframework.batch.core.step.skip.SkipPolicy;
-import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy;
-import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
-import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +24,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
+    
+    public static final String CONVERT_IMAGE_JOB = "convertImageJob";
+    public static final String MOVE_FILE_STEP = "moveFileStep";
+    public static final String SPLIT_FILE_STEP = "splitFileStep";
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -68,7 +66,7 @@ public class BatchConfiguration {
 
     ) {
 
-	return jobBuilderFactory.get("convertImageJob") //
+	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
 			.next(splitFileStep) //

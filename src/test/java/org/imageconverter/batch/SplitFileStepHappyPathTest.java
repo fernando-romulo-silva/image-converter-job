@@ -1,12 +1,14 @@
 package org.imageconverter.batch;
 
 import static java.io.File.separator;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.imageconverter.config.BatchConfiguration.*;
+import static org.imageconverter.config.BatchConfiguration.SPLIT_FILE_STEP;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
@@ -61,6 +63,14 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
 	createBatchFile();
+	
+	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
+	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
+	Files.move(//
+			Paths.get(inputFolderAbsolutePath.toString() + separator + fileName), //
+			Paths.get(processingAbsolutePath.toString() + separator + fileName), //
+			REPLACE_EXISTING //
+	);	
     }
 
     @AfterAll

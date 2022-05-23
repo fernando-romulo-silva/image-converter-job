@@ -83,15 +83,9 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
     void executeSplitFileStep() throws Exception {
 
 	// given
-	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
-	
-	final var actualFileLocation = new FileSystemResource(Paths.get(inputFolderAbsolutePath.toString() + separator + fileName));
 	final var expectedFileLocation = new FileSystemResource(Paths.get(processingAbsolutePath.toString() + separator + fileName));
 	
-	assertThat(actualFileLocation.exists()).isTrue();
-	assertThat(expectedFileLocation.exists()).isFalse();
-
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(SPLIT_FILE_STEP, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
@@ -101,7 +95,6 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
-	assertThat(actualFileLocation.exists()).isFalse();
 	assertThat(expectedFileLocation.exists()).isTrue();
     }
 }

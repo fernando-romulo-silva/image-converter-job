@@ -2,6 +2,7 @@ package org.imageconverter.config;
 
 import javax.sql.DataSource;
 
+import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.BatchConfigurationException;
@@ -24,7 +25,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
-    
+
     public static final String CONVERT_IMAGE_JOB = "convertImageJob";
     public static final String MOVE_FILE_STEP = "moveFileStep";
     public static final String SPLIT_FILE_STEP = "splitFileStep";
@@ -58,22 +59,27 @@ public class BatchConfiguration {
     @Bean
     public Job job( //
 		    final Step moveFileStep, //
-		    final Step splitFileStep //
+		    final Step splitFileStep, //
 //		    final Step loadFilesStep, //
 //		    final Step convertionStep, //
 //		    final Step deleteSplitedStep, //
-//		    final Step finalizeStep
-
-    ) {
+//		    final Step finalizeStep,
+		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider) {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
-			.next(splitFileStep) //
+			.next(splitFileStepExecutionDecider) //
+			/*--*/.on("SKIP")
+			/*------*/.to(splitFileStep) //
+			/*--*/.on("")
+			/*------*/.to(splitFileStep)
+//			.fro
 //			.next(loadFilesStep) //
 //			.next(convertionStep) //
 //			.next(deleteSplitedStep) //
 //			.next(finalizeStep) //
+			.end() //
 			.build();
     }
 

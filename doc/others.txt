@@ -9,11 +9,18 @@ Batch work with one file
    ----> else slipt it
 
 3) load files
-   -> check image size
-   -> check file name (must be unique)
+   -> load in parallel (if it has splited files) 
+   ----> check image size
+   ----> check file name (must be unique)
+   
+   -> store in database (mongoDB)
+   
+   -> move file
+   
 
 
 4) send msg convert
+   -> send in parallel (if it has splited files)
 
 5) update status
 
@@ -40,7 +47,16 @@ Where:
 
 ------------------------------------------------------------------------------------------------------------
 
-Link
+Links
+
+https://giuliana-bezerra.medium.com/
+
+https://giuliana-bezerra.medium.com/desenvolvimento-com-spring-batch-steps-4d42af2696ec
+
+https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html
+
+https://stackoverflow.com/questions/36263965/processing-a-large-file-using-spring-batch
+
 
 https://spring.io/blog/2021/01/27/spring-batch-on-kubernetes-efficient-batch-processing-at-scale
 

@@ -1,9 +1,12 @@
 package org.imageconverter.batch.step02splitfile;
 
+import static org.apache.commons.lang3.math.NumberUtils.LONG_ZERO;
+
 import java.util.Objects;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
@@ -19,7 +22,7 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
     private static final String FLOW_STATUS_SKIP = "SKIP";
 
-    private final Logger LOGGER = null;
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private final Long splitFileSize;
 
@@ -32,22 +35,19 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
     }
 
     @Override
-    public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
+    public FlowExecutionStatus decide(final JobExecution jobExecution, final StepExecution stepExecution) {
 
-	String status = FLOW_STATUS_CONTINUE;
+	final String status;
 
-	final boolean someCondition;
-	
-	if (Objects.nonNull(splitFileSize) && NumberUtils.compare(splitFileSize, 0) > 0) {
-	    someCondition = true;
+	if (Objects.nonNull(splitFileSize) && NumberUtils.compare(splitFileSize, LONG_ZERO) > 0) {
+
+	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is DISABLED. Continuing with the next Step.");
+
+	    status = FLOW_STATUS_CONTINUE;
 	} else {
-	    someCondition = false;
-	}
-
-	if (someCondition == false) {
-
-	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step execution is disabled. Continuing with the next Step.");
-
+	    
+	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is ENABLED. Continuing with the this Step.");
+	    
 	    status = FLOW_STATUS_SKIP;
 	}
 

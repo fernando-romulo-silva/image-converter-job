@@ -15,7 +15,7 @@ application:
         processing-files: file:${user.home}/Temp/image-converter-job/folders/processing
         processed-files: file:{user.home}/Temp/image-converter-job/folders/processed
    
-    split-file-size: 4        
+    split-file-size: 10        
      
 #============== Data Source ===========================================================================
 spring: 

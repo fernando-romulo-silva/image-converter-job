@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -53,6 +55,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 //
+@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
 class MoveFileStepHappyPathTest extends AbstractBatchTest {
 

@@ -55,9 +55,14 @@ abstract class AbstractBatchTest {
     protected Resource[] images;
 
     protected String fileName = "2022-04-24_10-29_DBRGA.txt";
+    
+    protected Long qtyImages = 0L;
 
     protected void createBatchFile() throws IOException {
-	int i = 1;
+	
+//	cleacnFolders();
+	
+	long i = 0;
 
 	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
 
@@ -81,6 +86,8 @@ abstract class AbstractBatchTest {
 		i++;
 	    }
 	}
+	
+	qtyImages = i;
     }
 
     protected void cleanFolders() throws IOException {

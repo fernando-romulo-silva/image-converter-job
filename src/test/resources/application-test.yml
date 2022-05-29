@@ -15,7 +15,7 @@ application:
         processing-files: classpath:folders/processing
         processed-files: classpath:folders/processed
    
-    split-file-size: 2      
+    split-file-size: 3      
     
     
 #============== Data Source ===========================================================================

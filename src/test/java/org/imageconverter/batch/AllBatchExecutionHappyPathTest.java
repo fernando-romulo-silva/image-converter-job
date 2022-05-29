@@ -10,6 +10,7 @@ import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
 import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
+import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
@@ -18,12 +19,13 @@ import org.imageconverter.config.PersistenceJpaConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -46,7 +48,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 		classes = { //
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
 			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
-			SplitFileStepConfiguration.class, SplitFileTasklet.class // Second Step
+			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class // Second Step
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -54,6 +56,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 //
+@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
 class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
 
@@ -93,9 +96,9 @@ class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
 	assertThat(actualJobExitStatus.getExitCode()).isEqualTo(expectedJobStatus);
     }
 
-    @Test
-    @Disabled
-    @Order(2)
+//    @Test
+//    @Disabled
+//    @Order(2)
     void checkValueTest() throws Exception {
 
 	// given

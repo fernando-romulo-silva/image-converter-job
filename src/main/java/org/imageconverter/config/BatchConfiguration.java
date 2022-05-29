@@ -59,27 +59,30 @@ public class BatchConfiguration {
     @Bean
     public Job job( //
 		    final Step moveFileStep, //
-		    final Step splitFileStep, //
-//		    final Step loadFilesStep, //
+		    final Step splitFileStep //
+//		    final Step serialLoadFilesStep, //
+//		    final Step paralellLoadFilesStep, //
 //		    final Step convertionStep, //
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
-		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider) {
+//		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
+		    ) {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
-			.next(splitFileStepExecutionDecider) //
-			/*--*/.on("SKIP")
-			/*------*/.to(splitFileStep) //
-			/*--*/.on("")
-			/*------*/.to(splitFileStep)
+			.next(splitFileStep) //
+//			.next(splitFileStepExecutionDecider) //
+			/*--*///.on("SKIP")
+			/*------*///.to(serialLoadFilesStep) //
+			/*--*///.on("")
+			/*------*///.to(paralellLoadFilesStep)
+//			.end() //
 //			.fro
 //			.next(loadFilesStep) //
 //			.next(convertionStep) //
 //			.next(deleteSplitedStep) //
 //			.next(finalizeStep) //
-			.end() //
 			.build();
     }
 

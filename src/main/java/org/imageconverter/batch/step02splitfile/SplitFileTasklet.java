@@ -1,9 +1,13 @@
 package org.imageconverter.batch.step02splitfile;
 
-import java.io.File;
+import static java.io.File.separator;
+
 import java.io.IOException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.SystemCommandTasklet;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,19 +18,26 @@ import org.springframework.stereotype.Component;
 @StepScope
 public class SplitFileTasklet extends SystemCommandTasklet {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
     private final String fileName;
 
     private final Resource processingFolder;
 
+    private final Long splitFileSize;
+
     SplitFileTasklet(//
 		    @Value("#{jobParameters['fileName']}") //
 		    final String newFileName, //
+		    //
+		    @Value("${application.split-file-size}") final Long newSplitFileSize,
 		    //
 		    @Value("${application.batch-folders.processing-files}") //
 		    final Resource newProcessingFolder) throws IOException {
 	super();
 
 	this.fileName = newFileName;
+	this.splitFileSize = newSplitFileSize;
 	this.processingFolder = newProcessingFolder;
 
 	addCommand();
@@ -35,14 +46,18 @@ public class SplitFileTasklet extends SystemCommandTasklet {
     private void addCommand() throws IOException {
 
 	// split -l 200000 filename
-	// split -l 2 -a5 -d --additional-suffix=.txt filename.txt filename
 
 	final var processingAbsolutePath = processingFolder.getFile().getAbsolutePath();
-	final var linesSize = 2;
-	final var prefixFile = StringUtils.substringBefore(fileName, ".");
+	final var baseName = FilenameUtils.getBaseName(fileName);
+	final var extension = FilenameUtils.getExtension(fileName);
+	final var additonalSuffix = StringUtils.isEmpty(extension) ? "" : "--additional-suffix=." + extension;
 
-	final var command = "split -l " + linesSize + " -a5 -d --additional-suffix=.txt " + processingAbsolutePath + File.separator + fileName + " " + processingAbsolutePath + File.separator + prefixFile;
-	
+	// -a5 -d
+	final var command = "split -l " + splitFileSize + "  " + additonalSuffix + " " + processingAbsolutePath + separator + fileName + " " + processingAbsolutePath + separator + baseName;
+
+	LOGGER.info("File name: '{}', Max records amount '{}'", fileName, splitFileSize);
+	LOGGER.info("Split command: '{}'", command);
+
 	setCommand(command);
 	setTimeout(5000);
     }

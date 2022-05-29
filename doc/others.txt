@@ -1,9 +1,9 @@
 
 Batch work with one file
 
-1) move file folder
+1) move file to processing folder
 
-2) split files
+2) split files if it's necessary
    -> check line size
    ----> if 0 don't split
    ----> else slipt it
@@ -12,6 +12,7 @@ Batch work with one file
    -> load in parallel (if it has splited files) 
    ----> check image size
    ----> check file name (must be unique)
+   -> load non parallel (if it has'nt slipted)
    
    -> store in database (mongoDB)
    
@@ -48,6 +49,8 @@ Where:
 ------------------------------------------------------------------------------------------------------------
 
 Links
+
+https://nirajsonawane.github.io/2018/11/08/Spring-Batch-Process-Multiple-Files-Parallel/
 
 https://giuliana-bezerra.medium.com/
 

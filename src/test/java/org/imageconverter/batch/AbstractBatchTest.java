@@ -60,7 +60,7 @@ abstract class AbstractBatchTest {
 
     protected void createBatchFile() throws IOException {
 	
-//	cleacnFolders();
+	cleanFolders();
 	
 	long i = 0;
 

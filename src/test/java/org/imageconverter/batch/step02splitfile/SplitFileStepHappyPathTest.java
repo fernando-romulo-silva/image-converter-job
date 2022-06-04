@@ -1,17 +1,25 @@
-package org.imageconverter.batch;
+package org.imageconverter.batch.step02splitfile;
 
 import static java.io.File.separator;
+import static java.math.RoundingMode.UP;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.imageconverter.config.BatchConfiguration.MOVE_FILE_STEP;
+import static org.imageconverter.config.BatchConfiguration.SPLIT_FILE_STEP;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Objects;
 
-import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
-import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
-import org.imageconverter.batch.step01movefile.MoveFileTasklet;
+import org.apache.commons.io.FilenameUtils;
+import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -23,15 +31,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -47,7 +53,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class // First Step
+			SplitFileStepExecutionDecider.class, SplitFileTasklet.class, SplitFileStepConfiguration.class // Second Step
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -55,9 +61,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 //
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
-class MoveFileStepHappyPathTest extends AbstractBatchTest {
+class SplitFileStepHappyPathTest extends AbstractBatchTest {
+    
+    @Value("${application.split-file-size}")
+    private Long splitFileSize;
 
     @BeforeAll
     void beforeAll() throws IOException {
@@ -65,6 +73,15 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
 	createBatchFile();
+
+	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
+	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
+	
+	Files.move(//
+			Paths.get(inputFolderAbsolutePath.toString() + separator + fileName), //
+			Paths.get(processingAbsolutePath.toString() + separator + fileName), //
+			REPLACE_EXISTING //
+	);
     }
 
     @AfterAll
@@ -74,20 +91,22 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 
     @Test
     @Order(1)
-    void executeMoveFileStep() throws Exception {
+    void executeSplitFileStep() throws IOException {
 
 	// given
-	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
 	
-	final var actualFileLocation = new FileSystemResource(Paths.get(inputFolderAbsolutePath.toString() + separator + fileName));
-	final var expectedFileLocation = new FileSystemResource(Paths.get(processingAbsolutePath.toString() + separator + fileName));
+	final var baseName =  FilenameUtils.getBaseName(fileName); 
 	
-	assertThat(actualFileLocation.exists()).isTrue();
-	assertThat(expectedFileLocation.exists()).isFalse();
+	final var qtyFiles = new BigDecimal(qtyImages).divide(new BigDecimal(splitFileSize), UP).intValue();
+			
+	final var expectedFilesNames = new ArrayList<String>(qtyFiles);
+	for (var i = 97; i < 97 + qtyFiles; i++) {
+	    expectedFilesNames.add(baseName + "a" + (char)i + ".txt");
+	}
 
 	// when
-	final var jobExecution = jobLauncherTestUtils.launchStep(MOVE_FILE_STEP, defaultJobParameters());
+	final var jobExecution = jobLauncherTestUtils.launchStep(SPLIT_FILE_STEP, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
@@ -95,7 +114,15 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
-	assertThat(actualFileLocation.exists()).isFalse();
-	assertThat(expectedFileLocation.exists()).isTrue();
+	final var resultedFilesNames = new ArrayList<String>(); 
+	final var filter = (Filter<Path>) p -> contains(p.getFileName().toString(), baseName) && !Objects.equals(p.getFileName().toString(), fileName); 
+	try (final var stream = Files.newDirectoryStream(processingAbsolutePath, filter)) {
+	    for (final var p : stream) {
+		resultedFilesNames.add(p.getFileName().toString());
+	    }
+	}
+	
+	assertThat(resultedFilesNames).hasSize(qtyFiles);
+	assertThat(resultedFilesNames).containsAll(expectedFilesNames);
     }
 }

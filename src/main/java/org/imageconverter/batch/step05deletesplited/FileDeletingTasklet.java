@@ -7,8 +7,10 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+@Component
 public class FileDeletingTasklet implements Tasklet, InitializingBean {
 
     private Resource[] resources;

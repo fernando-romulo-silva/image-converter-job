@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
-    private static final String FLOW_STATUS_CONTINUE = "CONTINUE";
+    public static final String FLOW_STATUS_CONTINUE_PARALELL = "PARALELL";
 
-    private static final String FLOW_STATUS_SKIP = "SKIP";
+    public static final String FLOW_STATUS_CONTINUE_SERIAL = "SERIAL";
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -43,12 +43,12 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
 	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is DISABLED. Continuing with the next Step.");
 
-	    status = FLOW_STATUS_CONTINUE;
+	    status = FLOW_STATUS_CONTINUE_PARALELL;
 	} else {
 	    
 	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is ENABLED. Continuing with the this Step.");
 	    
-	    status = FLOW_STATUS_SKIP;
+	    status = FLOW_STATUS_CONTINUE_SERIAL;
 	}
 
 	return new FlowExecutionStatus(status);

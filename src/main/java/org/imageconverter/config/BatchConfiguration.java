@@ -1,5 +1,7 @@
 package org.imageconverter.config;
 
+import static org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider.*;
+
 import javax.sql.DataSource;
 
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
@@ -59,25 +61,25 @@ public class BatchConfiguration {
     @Bean
     public Job job( //
 		    final Step moveFileStep, //
-		    final Step splitFileStep //
-//		    final Step serialLoadFilesStep, //
-//		    final Step paralellLoadFilesStep, //
+		    final Step splitFileStep, //
+		    final Step loadFilesStepSerial, //
+		    final Step loadFilesStepParalell, //
 //		    final Step convertionStep, //
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
-//		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
+		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
 		    ) {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
-			.next(splitFileStep) //
-//			.next(splitFileStepExecutionDecider) //
-			/*--*///.on("SKIP")
-			/*------*///.to(serialLoadFilesStep) //
-			/*--*///.on("")
-			/*------*///.to(paralellLoadFilesStep)
-//			.end() //
+			.next(splitFileStepExecutionDecider) //
+			/*--*/.on(FLOW_STATUS_CONTINUE_PARALELL)
+			/*------*/.to(splitFileStep) //
+			/*------*/.next(loadFilesStepParalell) //
+			/*--*/.on(FLOW_STATUS_CONTINUE_SERIAL)
+			/*------*/.to(loadFilesStepSerial)
+			.end() //
 //			.fro
 //			.next(loadFilesStep) //
 //			.next(convertionStep) //

@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.springframework.batch.core.step.skip.SkipLimitExceededException;
 import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.file.FlatFileParseException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BatchSkipPolicy implements SkipPolicy {
 
     private static final Logger LOGGER = getLogger(BatchSkipPolicy.class);

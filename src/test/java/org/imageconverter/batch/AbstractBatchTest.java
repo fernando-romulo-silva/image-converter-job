@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
-abstract class AbstractBatchTest {
+public abstract class AbstractBatchTest {
 
     @Autowired
     protected JobLauncherTestUtils jobLauncherTestUtils;

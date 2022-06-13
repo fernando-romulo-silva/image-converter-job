@@ -1,6 +1,6 @@
 package org.imageconverter.batch.step03loadfiles;
 
-import org.imageconverter.domain.ImageFileLoad;
+import org.imageconverter.infra.ImageFileLoad;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;

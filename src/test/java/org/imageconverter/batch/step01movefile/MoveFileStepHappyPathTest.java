@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.imageconverter.batch.AbstractBatchTest;
-import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
-import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
-import org.imageconverter.batch.step01movefile.MoveFileTasklet;
+import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -48,7 +46,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class // First Step
+			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
+			SplitFileStepExecutionDecider.class 
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

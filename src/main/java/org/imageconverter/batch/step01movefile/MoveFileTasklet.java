@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.imageconverter.domain.BatchProcessingFile;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -15,6 +19,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @StepScope
@@ -25,6 +30,9 @@ public class MoveFileTasklet implements Tasklet {
     private final Resource inputFolder;
 
     private final Resource processingFolder;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     MoveFileTasklet(//
 		    @Value("#{jobParameters['fileName']}") //
@@ -53,6 +61,14 @@ public class MoveFileTasklet implements Tasklet {
 			REPLACE_EXISTING //
 	);
 
+	saveBatchProcessingFile();
+	
 	return RepeatStatus.FINISHED;
+    }
+
+    @Transactional
+    public void saveBatchProcessingFile() {
+	final var file = new BatchProcessingFile(fileName);
+	entityManager.merge(file);
     }
 }

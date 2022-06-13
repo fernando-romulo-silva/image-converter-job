@@ -68,17 +68,17 @@ public class BatchConfiguration {
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
 		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
-		    ) {
+    ) {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
 			.next(splitFileStepExecutionDecider) //
-			/*--*/.on(FLOW_STATUS_CONTINUE_PARALELL)
-			/*------*/.to(splitFileStep) //
-			/*------*/.next(loadFilesStepParalell) //
-			/*--*/.on(FLOW_STATUS_CONTINUE_SERIAL)
-			/*------*/.to(loadFilesStepSerial)
+			/*--*/.on(FLOW_STATUS_CONTINUE_PARALELL) //
+			/*-------*/.to(splitFileStep) //
+			/*-------*/.next(loadFilesStepParalell) //
+			/*--*/.on(FLOW_STATUS_CONTINUE_SERIAL)//
+			/*-------*/.to(loadFilesStepSerial) //
 			.end() //
 //			.fro
 //			.next(loadFilesStep) //

@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BatchCommandLineRunner implements CommandLineRunner { // implements ApplicationRunner {
+public class BatchCommandLineRunner implements CommandLineRunner {
 
     private final JobLauncher jobLauncher;
 
@@ -20,12 +20,6 @@ public class BatchCommandLineRunner implements CommandLineRunner { // implements
 	this.jobLauncher = jobLauncher;
 	this.job = job;
     }
-
-//    @Override
-//    public void run(ApplicationArguments applicationArguments) throws Exception {
-//	System.out.println("ApplicationRunner");
-//	System.out.println(applicationArguments.getOptionNames());
-//    }
 
     /**
      *

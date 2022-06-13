@@ -4,7 +4,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.MalformedURLException;
 
-import org.imageconverter.domain.ImageFileLoad;
+import org.imageconverter.infra.ImageFileLoad;
 import org.slf4j.Logger;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;

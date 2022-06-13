@@ -1,11 +1,14 @@
 package org.imageconverter.batch.step03loadfiles;
 
+import static java.io.File.separator;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.util.stream.Stream;
 
-import org.imageconverter.domain.ImageFileLoad;
+import org.apache.commons.io.FilenameUtils;
+import org.imageconverter.infra.ImageFileLoad;
 import org.slf4j.Logger;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -58,10 +61,10 @@ public class LoadFilesStepParallelConfiguration {
     @Bean
     public Step loadFilesStepParalellSlave( //
 		    final ItemReader<ImageFileLoad> paralellItemReader, //
-		    
-		    //final ItemProcessor<String, ImageFileLoad> itemProcessor, //
-		    //final ItemWriter<ImageFileLoad> itemWriter, //
-		    
+
+		    // final ItemProcessor<String, ImageFileLoad> itemProcessor, //
+		    // final ItemWriter<ImageFileLoad> itemWriter, //
+
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //
@@ -71,10 +74,10 @@ public class LoadFilesStepParallelConfiguration {
 			.<ImageFileLoad, ImageFileLoad>chunk(1000) //
 			//
 			.reader(paralellItemReader) //
-			//.processor(itemProcessor) //
+			// .processor(itemProcessor) //
 			.writer(items -> items.forEach(System.out::println)) //
 			.build();
-    }  
+    }
 
     @Bean
     @StepScope
@@ -82,27 +85,28 @@ public class LoadFilesStepParallelConfiguration {
 		    //
 		    @Value("#{stepExecutionContext['fileName']}") //
 		    final String fileName, //
-
+		       
 		    final LoadFileSetMapper loadFileSetMapper, //
 
 		    final AbstractLineTokenizer imageFileTokenizer
 
-    ) throws MalformedURLException {
+    ) throws IOException {
 
-	LOGGER.info("Parallel Reader");
+	LOGGER.info("Parallel Reader, file {}", fileName);
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
 	lineMapper.setLineTokenizer(imageFileTokenizer);
 	lineMapper.setFieldSetMapper(loadFileSetMapper);
 
+	final var resource = new UrlResource(fileName);
+	
 	return new FlatFileItemReaderBuilder<ImageFileLoad>() //
 			.name("paralellItemReader") //
 			.lineMapper(lineMapper) //
-			.resource(new UrlResource(fileName)) //
+			.resource(resource) //
 			.build();
-    }    
-    
-    
+    }
+
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {
 	final var taskExecutor = new ThreadPoolTaskExecutor();
@@ -116,20 +120,29 @@ public class LoadFilesStepParallelConfiguration {
 
     @Bean
     @StepScope
-    public Partitioner partitioner() {
-    	
-	LOGGER.info("In Partitioner");
-    	
+    public Partitioner partitioner(//
+
+		    @Value("#{jobParameters['fileName']}") //
+		    final String fileName, //
+
+		    @Value("${application.batch-folders.processing-files}") //
+		    final Resource processingFolder //
+
+    ) throws IOException {
+
+	final var baseName = FilenameUtils.getBaseName(fileName);
+
 	final var partitioner = new MultiResourcePartitioner();
 	final var resolver = new PathMatchingResourcePatternResolver();
 
-	Resource[] resources = null;
-	try {
-	    resources = resolver.getResources("/*.txt");
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-
+	final var filesFolder = resolver.getResources(processingFolder.getURI() + separator + baseName + "*.txt");
+	
+	final var filesList = Stream.of(filesFolder) //
+			.filter(r -> !equalsIgnoreCase(r.getFilename(), fileName)) //
+			.toList();
+	
+	final var resources = filesList.toArray(new Resource[filesList.size()]);
+	
 	partitioner.setResources(resources);
 	partitioner.partition(10);
 	return partitioner;

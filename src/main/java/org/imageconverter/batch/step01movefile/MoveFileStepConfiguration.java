@@ -8,6 +8,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class MoveFileStepConfiguration {
@@ -21,9 +22,10 @@ public class MoveFileStepConfiguration {
     }
 
     @Bean
-    Step moveFileStep(final Tasklet moveFileTasklet, final MoveFileStepLoggingListener moveFileStepLoggingListener) {
+    Step moveFileStep(final Tasklet moveFileTasklet, final MoveFileStepLoggingListener moveFileStepLoggingListener, final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory.get(MOVE_FILE_STEP) //
+			.transactionManager(transactionManager) //
 			.listener(moveFileStepLoggingListener) //
 			.tasklet(moveFileTasklet) //
 			.build();

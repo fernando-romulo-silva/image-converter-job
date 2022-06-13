@@ -12,6 +12,7 @@ import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
+import org.imageconverter.batch.step03loadfiles.LoadFileSetMapper;
 import org.imageconverter.batch.step03loadfiles.LoadFilesStepConfiguration;
 import org.imageconverter.batch.step03loadfiles.LoadFilesStepParallelConfiguration;
 import org.imageconverter.batch.step03loadfiles.LoadFilesStepSerialConfiguration;
@@ -52,7 +53,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
 			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
 			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class, // Second Step
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class,  
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, LoadFileSetMapper.class  // Third
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

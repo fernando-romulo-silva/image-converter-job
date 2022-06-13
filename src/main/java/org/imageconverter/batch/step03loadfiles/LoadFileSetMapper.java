@@ -1,11 +1,13 @@
 package org.imageconverter.batch.step03loadfiles;
 
-import org.imageconverter.domain.ImageFileLoad;
+import org.imageconverter.infra.ImageFileLoad;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 
+@StepScope
 @Component
 public class LoadFileSetMapper implements FieldSetMapper<ImageFileLoad> {
 

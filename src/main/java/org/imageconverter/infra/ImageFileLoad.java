@@ -1,4 +1,4 @@
-package org.imageconverter.domain;
+package org.imageconverter.infra;
 
 public final record ImageFileLoad( //
 		String id, //

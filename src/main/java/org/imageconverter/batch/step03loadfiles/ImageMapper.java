@@ -13,7 +13,7 @@ public class ImageMapper extends BeanWrapperFieldSetMapper<ImageFileLoad> {
 	return new ImageFileLoad( //
 			fs.readRawString("id"), //
 			fs.readString("fileName"), //
-			fs.readString("fileTpe") //
+			fs.readString("fileContent") //
 	);
     }
 }

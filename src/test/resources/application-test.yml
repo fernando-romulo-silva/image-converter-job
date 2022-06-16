@@ -15,7 +15,7 @@ application:
         processing-files: classpath:folders/processing
         processed-files: classpath:folders/processed
    
-    split-file-size: 3      
+    split-file-size: 3     
     
     
 #============== Data Source ===========================================================================
@@ -47,3 +47,8 @@ spring:
         jdbc.initialize-schema: never
         # EMBEDDED always
         # job.enabled: false
+        
+# logging:
+#   level:
+#     root: ERROR
+#     org.springframework.batch: DEBUG

@@ -1,8 +1,13 @@
 package org.imageconverter.batch.step03loadfiles;
 
+import static java.io.File.separator;
+import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_SERIAL;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 import org.imageconverter.infra.ImageFileLoad;
 import org.slf4j.Logger;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -44,13 +50,13 @@ public class LoadFilesStepSerialConfiguration {
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //
-			.get("loadFilesStepSerial") //
+			.get(LOAD_FILE_STEP_SERIAL) //
 			//
 			.transactionManager(transactionManager) //
 			.<ImageFileLoad, ImageFileLoad>chunk(1000) //
 			//
 			.reader(serialItemReader) //
-			//.processor(item -> item) //
+			// .processor(item -> item) //
 			.writer(items -> items.forEach(System.out::println)) //
 
 			.build();
@@ -62,14 +68,21 @@ public class LoadFilesStepSerialConfiguration {
 		    //
 		    @Value("#{jobParameters['fileName']}") //
 		    final String fileName, //
-
+		    //
+		    @Value("${application.batch-folders.processing-files}") //
+		    final Resource processingFolder, //
+		    //
 		    final LoadFileSetMapper loadFileSetMapper, //
-
+		    //
 		    final AbstractLineTokenizer imageFileTokenizer
 
-    ) throws MalformedURLException {
+    ) throws IOException, URISyntaxException {
 
-	LOGGER.info("Parallel Reader");
+	LOGGER.info("Serial Reader");
+
+	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
+	final var pathFile = Paths.get(processingAbsolutePath.toString() + separator + fileName);
+	final var uri = new URI("file:" + pathFile.toString());
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
 	lineMapper.setLineTokenizer(imageFileTokenizer);
@@ -78,7 +91,7 @@ public class LoadFilesStepSerialConfiguration {
 	return new FlatFileItemReaderBuilder<ImageFileLoad>() //
 			.name("serialItemReader") //
 			.lineMapper(lineMapper) //
-			.resource(new UrlResource(fileName)) //
+			.resource(new UrlResource(uri)) //
 			.build();
     }
 

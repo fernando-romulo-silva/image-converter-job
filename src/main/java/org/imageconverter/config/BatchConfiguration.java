@@ -31,6 +31,8 @@ public class BatchConfiguration {
     public static final String CONVERT_IMAGE_JOB = "convertImageJob";
     public static final String MOVE_FILE_STEP = "moveFileStep";
     public static final String SPLIT_FILE_STEP = "splitFileStep";
+    public static final String LOAD_FILE_STEP_PARALELL = "loadFilesStepParalell";
+    public static final String LOAD_FILE_STEP_SERIAL = "loadFilesStepSerial";
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -73,13 +75,17 @@ public class BatchConfiguration {
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) //
+			//
 			.next(splitFileStepExecutionDecider) //
-			/*--*/.on(FLOW_STATUS_CONTINUE_PARALELL) //
-			/*-------*/.to(splitFileStep) //
-			/*-------*/.next(loadFilesStepParalell) //
-			/*--*/.on(FLOW_STATUS_CONTINUE_SERIAL)//
-			/*-------*/.to(loadFilesStepSerial) //
-			.end() //
+			/*--*/.from(splitFileStepExecutionDecider) //
+			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) //
+			/*----------*/.to(splitFileStep) //
+			/*----------*/.next(loadFilesStepParalell) //
+			/*--*/.from(splitFileStepExecutionDecider) //
+			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)//
+			/*----------*/.to(loadFilesStepSerial) //
+			//
+			.end()
 //			.fro
 //			.next(loadFilesStep) //
 //			.next(convertionStep) //

@@ -30,7 +30,8 @@ public class SplitFileTasklet extends SystemCommandTasklet {
 		    @Value("#{jobParameters['fileName']}") //
 		    final String newFileName, //
 		    //
-		    @Value("${application.split-file-size}") final Long newSplitFileSize,
+		    @Value("${application.split-file-size}") // 
+		    final Long newSplitFileSize,
 		    //
 		    @Value("${application.batch-folders.processing-files}") //
 		    final Resource newProcessingFolder) throws IOException {

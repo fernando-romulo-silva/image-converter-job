@@ -2,6 +2,7 @@ package org.imageconverter.batch.step03loadfiles;
 
 import static java.io.File.separator;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_PARALELL;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -32,8 +33,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class LoadFilesStepParallelConfiguration {
-
+    
     private static final Logger LOGGER = getLogger(LoadFilesStepParallelConfiguration.class);
+
+    private static final String LOAD_FILES_STEP_PARALELL_SLAVE = "loadFilesStepParalellSlave";
 
     private final StepBuilderFactory stepBuilderFactory;
 
@@ -51,8 +54,8 @@ public class LoadFilesStepParallelConfiguration {
     ) {
 
 	return this.stepBuilderFactory //
-			.get("loadFilesStepParalell") //
-			.partitioner("loadFilesStepParalellSlave", partitioner) //
+			.get(LOAD_FILE_STEP_PARALELL) // 
+			.partitioner(LOAD_FILES_STEP_PARALELL_SLAVE, partitioner) //
 			.step(loadFilesStepParalellSlave) //
 			.taskExecutor(taskExecutor) //
 			.build();
@@ -68,7 +71,7 @@ public class LoadFilesStepParallelConfiguration {
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //
-			.get("loadFilesStepParalellSlave") //
+			.get(LOAD_FILES_STEP_PARALELL_SLAVE) //
 			//
 			.transactionManager(transactionManager) //
 			.<ImageFileLoad, ImageFileLoad>chunk(1000) //

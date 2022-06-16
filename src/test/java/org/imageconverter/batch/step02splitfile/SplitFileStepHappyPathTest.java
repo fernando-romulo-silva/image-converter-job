@@ -43,12 +43,14 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@TestPropertySource(properties = "application.split-file-size=2")
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //

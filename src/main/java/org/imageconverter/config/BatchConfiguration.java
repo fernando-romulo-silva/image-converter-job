@@ -74,16 +74,16 @@ public class BatchConfiguration {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
-			.start(moveFileStep) //
+			.start(moveFileStep) // move file to processing's folder
 			//
-			.next(splitFileStepExecutionDecider) //
+			.next(splitFileStepExecutionDecider) // check if it needs split the file
 			/*--*/.from(splitFileStepExecutionDecider) //
-			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) //
-			/*----------*/.to(splitFileStep) //
-			/*----------*/.next(loadFilesStepParalell) //
-			/*--*/.from(splitFileStepExecutionDecider) //
-			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)//
-			/*----------*/.to(loadFilesStepSerial) //
+			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) // Let split it 
+			/*----------*/.to(splitFileStep) // split it!
+			/*----------*/.next(loadFilesStepParalell) // load in paralell
+			/*--*/.from(splitFileStepExecutionDecider) // 
+			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)// We don't need split
+			/*----------*/.to(loadFilesStepSerial) // load in serial
 			//
 			.end()
 //			.fro

@@ -91,14 +91,14 @@ public class LoadFilesStepParallelConfiguration {
 		       
 		    final LoadFileSetMapper loadFileSetMapper, //
 
-		    final AbstractLineTokenizer imageFileTokenizer
+		    final AbstractLineTokenizer imageFileDelimitedTokenizer
 
     ) throws IOException {
 
 	LOGGER.info("Parallel Reader, file {}", fileName);
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
-	lineMapper.setLineTokenizer(imageFileTokenizer);
+	lineMapper.setLineTokenizer(imageFileDelimitedTokenizer);
 	lineMapper.setFieldSetMapper(loadFileSetMapper);
 
 	final var resource = new UrlResource(fileName);

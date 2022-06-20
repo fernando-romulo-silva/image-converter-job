@@ -24,7 +24,7 @@ public class LoadFilesStepConfiguration {
     }
 
     @Bean
-    public FixedLengthTokenizer imageFileTokenizerOld() {
+    public FixedLengthTokenizer imageFileFixedLength() {
 	final var tokenizer = new FixedLengthTokenizer();
 
 	tokenizer.setNames( //
@@ -45,7 +45,7 @@ public class LoadFilesStepConfiguration {
     }
 
     @Bean
-    public DelimitedLineTokenizer imageFileTokenizer() {
+    public DelimitedLineTokenizer imageFileDelimitedTokenizer() {
 	final var tokenizer = new DelimitedLineTokenizer(";");
 
 	tokenizer.setNames( //

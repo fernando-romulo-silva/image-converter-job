@@ -74,7 +74,7 @@ public class LoadFilesStepSerialConfiguration {
 		    //
 		    final LoadFileSetMapper loadFileSetMapper, //
 		    //
-		    final AbstractLineTokenizer imageFileTokenizer
+		    final AbstractLineTokenizer imageFileDelimitedTokenizer
 
     ) throws IOException, URISyntaxException {
 
@@ -85,7 +85,7 @@ public class LoadFilesStepSerialConfiguration {
 	final var uri = new URI("file:" + pathFile.toString());
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
-	lineMapper.setLineTokenizer(imageFileTokenizer);
+	lineMapper.setLineTokenizer(imageFileDelimitedTokenizer);
 	lineMapper.setFieldSetMapper(loadFileSetMapper);
 
 	return new FlatFileItemReaderBuilder<ImageFileLoad>() //

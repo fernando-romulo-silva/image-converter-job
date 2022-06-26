@@ -14,8 +14,10 @@ import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
 import org.imageconverter.batch.step03loadfiles.LoadFileSetMapper;
 import org.imageconverter.batch.step03loadfiles.LoadFilesStepConfiguration;
-import org.imageconverter.batch.step03loadfiles.LoadFilesStepParallelConfiguration;
-import org.imageconverter.batch.step03loadfiles.LoadFilesStepSerialConfiguration;
+import org.imageconverter.batch.step03loadfiles.parallel.LoadFilesStepParallelConfiguration;
+import org.imageconverter.batch.step03loadfiles.parallel.ParalellItemReader;
+import org.imageconverter.batch.step03loadfiles.serial.LoadFilesStepSerialConfiguration;
+import org.imageconverter.batch.step03loadfiles.serial.SerialItemReader;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -53,7 +55,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
 			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
 			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class, // Second Step
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, LoadFileSetMapper.class  // Third
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, LoadFileSetMapper.class,  // Third
+			SerialItemReader.class, ParalellItemReader.class
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

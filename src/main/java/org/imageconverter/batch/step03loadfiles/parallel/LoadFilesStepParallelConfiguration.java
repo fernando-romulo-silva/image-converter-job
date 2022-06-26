@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step03loadfiles;
+package org.imageconverter.batch.step03loadfiles.parallel;
 
 import static java.io.File.separator;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -17,16 +17,11 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.AbstractLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -81,35 +76,7 @@ public class LoadFilesStepParallelConfiguration {
 			.writer(items -> items.forEach(System.out::println)) //
 			.build();
     }
-
-    @Bean
-    @StepScope
-    public FlatFileItemReader<ImageFileLoad> paralellItemReader( //
-		    //
-		    @Value("#{stepExecutionContext['fileName']}") //
-		    final String fileName, //
-		       
-		    final LoadFileSetMapper loadFileSetMapper, //
-
-		    final AbstractLineTokenizer imageFileDelimitedTokenizer
-
-    ) throws IOException {
-
-	LOGGER.info("Parallel Reader, file {}", fileName);
-
-	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
-	lineMapper.setLineTokenizer(imageFileDelimitedTokenizer);
-	lineMapper.setFieldSetMapper(loadFileSetMapper);
-
-	final var resource = new UrlResource(fileName);
-	
-	return new FlatFileItemReaderBuilder<ImageFileLoad>() //
-			.name("paralellItemReader") //
-			.lineMapper(lineMapper) //
-			.resource(resource) //
-			.build();
-    }
-
+  
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {
 	final var taskExecutor = new ThreadPoolTaskExecutor();

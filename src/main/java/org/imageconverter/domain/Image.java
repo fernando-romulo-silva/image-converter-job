@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "IMAGE_BATCH")
@@ -34,6 +36,41 @@ public class Image {
 
     @Column(name = "IMG_CONVERSION", nullable = false, unique = true)
     private String conversion;
+    
+    Image() {
+	super();
+    }
+
+    public Image( //
+		    @NotEmpty(message = "The 'name' cannot be empty")//
+		    final String name, // 
+		    //
+		    @NotNull(message = "The 'file' cannot be null")
+		    final BatchProcessingFile file) {
+	super();
+	this.name = name;
+	this.file = file;
+    }
+    
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BatchProcessingFile getFile() {
+        return file;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public String getConversion() {
+        return conversion;
+    }
 
     @Override
     public int hashCode() {

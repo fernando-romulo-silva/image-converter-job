@@ -12,7 +12,9 @@ import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step02splitfile.SplitFileTasklet;
+import org.imageconverter.batch.step03loadfiles.LoadFileProcessor;
 import org.imageconverter.batch.step03loadfiles.LoadFileSetMapper;
+import org.imageconverter.batch.step03loadfiles.LoadFileWriter;
 import org.imageconverter.batch.step03loadfiles.LoadFilesStepConfiguration;
 import org.imageconverter.batch.step03loadfiles.parallel.LoadFilesStepParallelConfiguration;
 import org.imageconverter.batch.step03loadfiles.parallel.ParalellItemReader;
@@ -22,6 +24,7 @@ import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
+import org.imageconverter.domain.BatchProcessingFileRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,11 +55,22 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
-			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class, // Second Step
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, LoadFileSetMapper.class,  // Third
-			SerialItemReader.class, ParalellItemReader.class
+			// Configs
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			//
+			// Others
+			BatchProcessingFileRepository.class,
+			//
+			// First Step
+			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
+			//
+			// Second Step
+			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class, //
+			//
+			// Third Step
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, //
+			LoadFileSetMapper.class, SerialItemReader.class, ParalellItemReader.class, LoadFileProcessor.class, LoadFileWriter.class, //
+
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

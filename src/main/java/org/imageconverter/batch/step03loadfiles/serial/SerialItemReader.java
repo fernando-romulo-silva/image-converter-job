@@ -42,8 +42,8 @@ public class SerialItemReader extends FlatFileItemReader<ImageFileLoad> {
 	final var uri = new URI("file:" + pathFile.toString());
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
-	lineMapper.setLineTokenizer(imageFileDelimitedTokenizer);
 	lineMapper.setFieldSetMapper(loadFileSetMapper);
+	lineMapper.setLineTokenizer(imageFileDelimitedTokenizer);
 
 	setName("serialItemReader");
 	setResource(new UrlResource(uri));

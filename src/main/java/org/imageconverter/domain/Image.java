@@ -34,7 +34,7 @@ public class Image {
     @Column(name = "IMG_CREATED", nullable = false)
     private LocalDateTime created;
 
-    @Column(name = "IMG_CONVERSION", nullable = false, unique = true)
+    @Column(name = "IMG_CONVERSION")
     private String conversion;
     
     Image() {

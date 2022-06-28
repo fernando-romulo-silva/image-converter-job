@@ -41,6 +41,7 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -52,14 +53,12 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
 			// Configs
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
-			//
-			// Others
-			BatchProcessingFileRepository.class,
 			//
 			// First Step
 			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
@@ -70,7 +69,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			// Third Step
 			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, LoadFilesStepSerialConfiguration.class, //
 			LoadFileSetMapper.class, SerialItemReader.class, ParalellItemReader.class, LoadFileProcessor.class, LoadFileWriter.class, //
-
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

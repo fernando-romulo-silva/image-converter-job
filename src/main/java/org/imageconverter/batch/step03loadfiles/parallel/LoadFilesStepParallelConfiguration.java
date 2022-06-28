@@ -64,7 +64,6 @@ public class LoadFilesStepParallelConfiguration {
 		    final ItemReader<ImageFileLoad> paralellItemReader, //
 		    final ItemProcessor<ImageFileLoad, Image> loadFileProcessor, //
 		    final ItemWriter<Image> loadFileWriter, //
-
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //

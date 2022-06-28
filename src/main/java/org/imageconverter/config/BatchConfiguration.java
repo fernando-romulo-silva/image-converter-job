@@ -36,12 +36,6 @@ public class BatchConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
-//    @Autowired
-//    private StepBuilderFactory stepBuilderFactory;
-//
-//    @Autowired
-//    private JpaTransactionManager jpaTransactionManager;
-
     private final DataSource batchDataSource;
 
     @Autowired //
@@ -62,11 +56,11 @@ public class BatchConfiguration {
 
     @Bean
     public Job job( //
-		    final Step moveFileStep, //
-		    final Step splitFileStep, //
-		    final Step loadFilesStepSerial, //
-		    final Step loadFilesStepParalell, //
-//		    final Step convertionStep, //
+		    final Step moveFileStep, // Step 1
+		    final Step splitFileStep, // Step 2
+		    final Step loadFilesStepSerial, // Step 3.1
+		    final Step loadFilesStepParalell, // Step 3.2
+		    final Step convertionStep, // 4
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
 		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
@@ -85,12 +79,11 @@ public class BatchConfiguration {
 			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)// We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
 			//
+			//			
+			.next(convertionStep) //
+			//.next(deleteSplitedStep) //
+			//.next(finalizeStep) //
 			.end()
-//			.fro
-//			.next(loadFilesStep) //
-//			.next(convertionStep) //
-//			.next(deleteSplitedStep) //
-//			.next(finalizeStep) //
 			.build();
     }
 

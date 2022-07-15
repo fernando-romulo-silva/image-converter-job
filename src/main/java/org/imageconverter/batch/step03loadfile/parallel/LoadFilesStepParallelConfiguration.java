@@ -1,9 +1,8 @@
-package org.imageconverter.batch.step03loadfiles.parallel;
+package org.imageconverter.batch.step03loadfile.parallel;
 
 import static java.io.File.separator;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_PARALELL;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.imageconverter.domain.Image;
 import org.imageconverter.infra.ImageFileLoad;
-import org.slf4j.Logger;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -31,8 +29,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class LoadFilesStepParallelConfiguration {
-
-    private static final Logger LOGGER = getLogger(LoadFilesStepParallelConfiguration.class);
 
     private static final String LOAD_FILES_STEP_PARALELL_SLAVE = "loadFilesStepParalellSlave";
 

@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step03loadfiles.serial;
+package org.imageconverter.batch.step03loadfile.serial;
 
 import static java.io.File.separator;
 
@@ -7,7 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
-import org.imageconverter.batch.step03loadfiles.LoadFileSetMapper;
+import org.imageconverter.batch.step03loadfile.LoadFileSetMapper;
 import org.imageconverter.infra.ImageFileLoad;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;

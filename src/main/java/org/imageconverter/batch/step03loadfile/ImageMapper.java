@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step03loadfiles;
+package org.imageconverter.batch.step03loadfile;
 
 import org.imageconverter.infra.ImageFileLoad;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;

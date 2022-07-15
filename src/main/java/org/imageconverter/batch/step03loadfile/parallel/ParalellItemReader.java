@@ -1,8 +1,8 @@
-package org.imageconverter.batch.step03loadfiles.parallel;
+package org.imageconverter.batch.step03loadfile.parallel;
 
 import java.net.MalformedURLException;
 
-import org.imageconverter.batch.step03loadfiles.LoadFileSetMapper;
+import org.imageconverter.batch.step03loadfile.LoadFileSetMapper;
 import org.imageconverter.infra.ImageFileLoad;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;

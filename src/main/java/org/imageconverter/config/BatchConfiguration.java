@@ -1,13 +1,13 @@
 package org.imageconverter.config;
 
-import static org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider.*;
+import static org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider.FLOW_STATUS_CONTINUE_PARALELL;
+import static org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider.FLOW_STATUS_CONTINUE_SERIAL;
 
 import javax.sql.DataSource;
 
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.BatchConfigurationException;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -29,10 +29,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfiguration {
 
     public static final String CONVERT_IMAGE_JOB = "convertImageJob";
+    
     public static final String MOVE_FILE_STEP = "moveFileStep";
     public static final String SPLIT_FILE_STEP = "splitFileStep";
     public static final String LOAD_FILE_STEP_PARALELL = "loadFilesStepParalell";
     public static final String LOAD_FILE_STEP_SERIAL = "loadFilesStepSerial";
+    public static final String CONVERTION_STEP_SERIAL = "convertionStep";
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -78,7 +80,6 @@ public class BatchConfiguration {
 			/*--*/.from(splitFileStepExecutionDecider) // 
 			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)// We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
-			//
 			//			
 			.next(convertionStep) //
 			//.next(deleteSplitedStep) //
@@ -99,7 +100,7 @@ public class BatchConfiguration {
     @Bean
     public JobRepository getJobRepository( //
 		    @Qualifier("batchPlatformTransactionManager") //
-		    final PlatformTransactionManager batchPlatformTransactionManager) {
+		    final PlatformTransactionManager batchPlatformTransactionManager) throws Exception {
 
 	final var factoryBean = new JobRepositoryFactoryBean();
 
@@ -108,13 +109,8 @@ public class BatchConfiguration {
 	factoryBean.setTablePrefix("BATCH_");
 	factoryBean.setIsolationLevelForCreate("PROPAGATION_REQUIRED");
 
-	try {
-
-	    factoryBean.afterPropertiesSet();
-	    return factoryBean.getObject();
-	} catch (final Exception ex) {
-	    throw new BatchConfigurationException(ex);
-	}
+	factoryBean.afterPropertiesSet();
+	return factoryBean.getObject();
     }
 
     @Bean

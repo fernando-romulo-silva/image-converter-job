@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step03loadfiles;
+package org.imageconverter.batch.step03loadfile;
 
 import org.imageconverter.infra.BatchSkipPolicy;
 import org.imageconverter.util.RecordSepartatorPolicy;

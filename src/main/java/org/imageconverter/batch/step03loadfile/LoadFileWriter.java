@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step03loadfiles;
+package org.imageconverter.batch.step03loadfile;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class LoadFileWriter implements ItemWriter<Image> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadFileWriter.class);
-    
+
     private final ImageRepository imageRepository;
 
     @Autowired
@@ -28,9 +28,8 @@ public class LoadFileWriter implements ItemWriter<Image> {
     @Override
     public void write(List<? extends Image> list) throws Exception {
 
-	for (var data : list) {
-	    // System.out.println("MyCustomWriter : Writing data : " + data.getId() + " : " + data.getName() + " : " + data.getSalary());
-	    imageRepository.save(data);
-	}
+	LOGGER.info("Save {0} images", list.size());
+
+	imageRepository.saveAll(list);
     }
 }

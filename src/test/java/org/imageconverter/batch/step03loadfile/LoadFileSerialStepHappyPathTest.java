@@ -93,6 +93,8 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
     @Test
     @Order(1)
     void executeLoadFileSerialStep() throws IOException {
+	
+	// given
 
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_SERIAL, defaultJobParameters());

@@ -19,6 +19,7 @@ import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
+import org.imageconverter.domain.BatchProcessingFileRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -32,6 +33,7 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -44,6 +46,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
 @TestPropertySource(properties = "application.split-file-size=2")
 @SpringBatchTest
 @ContextConfiguration( //

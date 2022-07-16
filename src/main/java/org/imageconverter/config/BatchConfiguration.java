@@ -80,8 +80,11 @@ public class BatchConfiguration {
 			/*--*/.from(splitFileStepExecutionDecider) // 
 			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)// We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
+			//
+			.from(moveFileStep) // back to root path
+			.next(convertionStep)
 			//			
-			.next(convertionStep) //
+//			.next(convertionStep) //
 			//.next(deleteSplitedStep) //
 			//.next(finalizeStep) //
 			.end()

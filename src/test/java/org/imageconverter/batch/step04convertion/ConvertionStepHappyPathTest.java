@@ -2,19 +2,13 @@ package org.imageconverter.batch.step04convertion;
 
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_SERIAL;
+import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
-import org.imageconverter.batch.step03loadfile.LoadFileProcessor;
-import org.imageconverter.batch.step03loadfile.LoadFileSetMapper;
-import org.imageconverter.batch.step03loadfile.LoadFileWriter;
-import org.imageconverter.batch.step03loadfile.LoadFilesStepConfiguration;
-import org.imageconverter.batch.step03loadfile.serial.LoadFilesStepSerialConfiguration;
-import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -70,7 +64,7 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 	// given
 
 	// when
-	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_SERIAL, defaultJobParameters());
+	final var jobExecution = jobLauncherTestUtils.launchStep(CONVERTION_STEP, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 

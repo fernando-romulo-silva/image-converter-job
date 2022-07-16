@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -41,8 +40,7 @@ public class LoadFilesStepParallelConfiguration {
 	this.stepBuilderFactory = stepBuilderFactory;
     }
 
-    @Bean
-    @Primary
+    @Bean("loadFilesStepParalell")
     Step loadFilesStepParalell( //
 		    final Step loadFilesStepParalellSlave, //
 		    final Partitioner partitioner, //
@@ -57,7 +55,7 @@ public class LoadFilesStepParallelConfiguration {
 			.build();
     }
 
-    @Bean
+    @Bean("loadFilesStepParalellSlave")
     Step loadFilesStepParalellSlave( //
 		    final ItemReader<ImageFileLoad> paralellItemReader, //
 		    final ItemProcessor<ImageFileLoad, Image> loadFileProcessor, //

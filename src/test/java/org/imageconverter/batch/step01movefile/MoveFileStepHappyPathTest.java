@@ -45,9 +45,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, // First Step
-			SplitFileStepExecutionDecider.class 
+			// Configs
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class,
+			//
+			// First Step: MoveFileStep
+			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

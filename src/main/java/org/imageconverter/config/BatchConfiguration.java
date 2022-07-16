@@ -5,13 +5,13 @@ import static org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDec
 
 import javax.sql.DataSource;
 
-import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
@@ -34,7 +34,7 @@ public class BatchConfiguration {
     public static final String SPLIT_FILE_STEP = "splitFileStep";
     public static final String LOAD_FILE_STEP_PARALELL = "loadFilesStepParalell";
     public static final String LOAD_FILE_STEP_SERIAL = "loadFilesStepSerial";
-    public static final String CONVERTION_STEP_SERIAL = "convertionStep";
+    public static final String CONVERTION_STEP = "convertionStep";
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -65,7 +65,7 @@ public class BatchConfiguration {
 		    final Step convertionStep, // 4
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
-		    final SplitFileStepExecutionDecider splitFileStepExecutionDecider//
+		    final JobExecutionDecider splitFileStepExecutionDecider//
     ) {
 
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //

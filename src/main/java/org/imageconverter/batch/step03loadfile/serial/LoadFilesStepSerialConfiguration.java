@@ -28,7 +28,7 @@ public class LoadFilesStepSerialConfiguration {
     }
 
     @Bean
-    public Step loadFilesStepSerial( //
+    Step loadFilesStepSerial( //
 		    final ItemReader<ImageFileLoad> serialItemReader, //
 		    final ItemProcessor<ImageFileLoad, Image> loadFileProcessor, //
 		    final ItemWriter<Image> loadFileWriter, //

@@ -54,8 +54,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, // Configs
-			SplitFileStepExecutionDecider.class, SplitFileTasklet.class, SplitFileStepConfiguration.class // Second Step
+			// Configs
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, //
+			//
+			// Second Step: SplitFileStep
+			SplitFileTasklet.class, SplitFileStepConfiguration.class //
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -65,7 +68,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 //
 @TestInstance(Lifecycle.PER_CLASS)
 class SplitFileStepHappyPathTest extends AbstractBatchTest {
-    
+
     @Value("${application.split-file-size}")
     private Long splitFileSize;
 
@@ -78,7 +81,7 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 
 	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
-	
+
 	Files.move(//
 			Paths.get(inputFolderAbsolutePath.toString() + separator + fileName), //
 			Paths.get(processingAbsolutePath.toString() + separator + fileName), //
@@ -97,14 +100,14 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 
 	// given
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
-	
-	final var baseName =  FilenameUtils.getBaseName(fileName); 
-	
+
+	final var baseName = FilenameUtils.getBaseName(fileName);
+
 	final var qtyFiles = new BigDecimal(qtyImages).divide(new BigDecimal(splitFileSize), UP).intValue();
-			
+
 	final var expectedFilesNames = new ArrayList<String>(qtyFiles);
 	for (var i = 97; i < 97 + qtyFiles; i++) {
-	    expectedFilesNames.add(baseName + "a" + (char)i + ".txt");
+	    expectedFilesNames.add(baseName + "a" + (char) i + ".txt");
 	}
 
 	// when
@@ -116,14 +119,14 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
-	final var resultedFilesNames = new ArrayList<String>(); 
-	final var filter = (Filter<Path>) p -> contains(p.getFileName().toString(), baseName) && !Objects.equals(p.getFileName().toString(), fileName); 
+	final var resultedFilesNames = new ArrayList<String>();
+	final var filter = (Filter<Path>) p -> contains(p.getFileName().toString(), baseName) && !Objects.equals(p.getFileName().toString(), fileName);
 	try (final var stream = Files.newDirectoryStream(processingAbsolutePath, filter)) {
 	    for (final var p : stream) {
 		resultedFilesNames.add(p.getFileName().toString());
 	    }
 	}
-	
+
 	assertThat(resultedFilesNames).hasSize(qtyFiles);
 	assertThat(resultedFilesNames).containsAll(expectedFilesNames);
     }

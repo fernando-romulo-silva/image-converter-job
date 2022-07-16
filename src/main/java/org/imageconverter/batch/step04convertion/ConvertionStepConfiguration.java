@@ -1,13 +1,10 @@
 package org.imageconverter.batch.step04convertion;
 
-import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP_SERIAL;
+import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 
 import org.imageconverter.domain.Image;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +30,7 @@ public class ConvertionStepConfiguration {
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //
-			.get(CONVERTION_STEP_SERIAL) //
+			.get(CONVERTION_STEP) //
 			//
 			.transactionManager(transactionManager) //
 			.<Image, Image>chunk(1000) //

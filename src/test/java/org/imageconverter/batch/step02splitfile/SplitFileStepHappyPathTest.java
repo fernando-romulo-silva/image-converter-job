@@ -33,7 +33,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -66,9 +65,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestInstance(Lifecycle.PER_CLASS)
 class SplitFileStepHappyPathTest extends AbstractBatchTest {
 
-    @Value("${application.split-file-size}")
-    private Long splitFileSize;
-
     @BeforeAll
     void beforeAll() throws IOException {
 
@@ -100,7 +96,7 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 
 	final var baseName = FilenameUtils.getBaseName(fileName);
 
-	final var qtyFiles = new BigDecimal(qtyImages).divide(new BigDecimal(splitFileSize), UP).intValue();
+	final var qtyFiles = new BigDecimal(images.length).divide(new BigDecimal(splitFileSize), UP).intValue();
 
 	final var expectedFilesNames = new ArrayList<String>(qtyFiles);
 	for (var i = 97; i < 97 + qtyFiles; i++) {

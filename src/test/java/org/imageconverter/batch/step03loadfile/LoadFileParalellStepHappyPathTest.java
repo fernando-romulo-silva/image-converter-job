@@ -1,15 +1,12 @@
 package org.imageconverter.batch.step03loadfile;
 
-import static java.io.File.separator;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_PARALELL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
@@ -53,8 +50,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			//
 			// Fourth Step 3.2: LoadFileParallel
 			LoadFileProcessor.class, LoadFileSetMapper.class, LoadFileWriter.class, //
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, ParalellItemReader.class,
-		} //
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, ParalellItemReader.class, } //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
@@ -64,21 +60,14 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestInstance(Lifecycle.PER_CLASS)
 class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
     
+    private List<Map.Entry<Long, String>> imagesDTO;
+
     @BeforeAll
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-
-	createBatchFile();
-
-	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
-	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
-
-	Files.move(//
-			Paths.get(inputFolderAbsolutePath.toString() + separator + fileName), //
-			Paths.get(processingAbsolutePath.toString() + separator + fileName), //
-			REPLACE_EXISTING //
-	);
+	
+	imagesDTO = createSpliptedBatchFile();
     }
 
     @AfterAll
@@ -90,13 +79,17 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
     @Order(1)
     void executeLoadFileSerialStep() throws IOException {
 
+	// given
+	final var qtImages = imagesDTO.stream().count();
+
+
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_PARALELL, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
+	assertThat(actualStepExecutions.size()).isEqualTo(splitFileSize.intValue() + 1); 
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
     }
 

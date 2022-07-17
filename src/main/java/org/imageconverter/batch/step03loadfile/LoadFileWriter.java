@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @StepScope
@@ -19,7 +18,6 @@ public class LoadFileWriter implements ItemWriter<Image> {
 
     private final ImageRepository imageRepository;
 
-    @Autowired
     LoadFileWriter(final ImageRepository imageRepository) {
 	super();
 	this.imageRepository = imageRepository;
@@ -28,7 +26,7 @@ public class LoadFileWriter implements ItemWriter<Image> {
     @Override
     public void write(List<? extends Image> list) throws Exception {
 
-	LOGGER.info("Save {0} images", list.size());
+	LOGGER.info("Save '{}' images", list.size());
 
 	imageRepository.saveAll(list);
     }

@@ -17,7 +17,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +39,6 @@ public class BatchConfiguration {
 
     private final DataSource batchDataSource;
 
-    @Autowired //
     BatchConfiguration(
 		    //
 		    final JobBuilderFactory jobBuilderFactory,
@@ -57,7 +55,7 @@ public class BatchConfiguration {
     // -----------------------------------------------------------------------------------
 
     @Bean
-    public Job job( //
+    Job job( //
 		    final Step moveFileStep, // Step 1
 		    final Step splitFileStep, // Step 2
 		    final Step loadFilesStepSerial, // Step 3.1
@@ -101,7 +99,7 @@ public class BatchConfiguration {
 //    }
 
     @Bean
-    public JobRepository getJobRepository( //
+    JobRepository getJobRepository( //
 		    @Qualifier("batchPlatformTransactionManager") //
 		    final PlatformTransactionManager batchPlatformTransactionManager) throws Exception {
 
@@ -117,7 +115,7 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JobLauncher createJobLauncher(final JobRepository jobRepository) throws Exception {
+    JobLauncher createJobLauncher(final JobRepository jobRepository) throws Exception {
 	SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
 	jobLauncher.setJobRepository(jobRepository);
 	jobLauncher.afterPropertiesSet();
@@ -126,12 +124,12 @@ public class BatchConfiguration {
 
     @Bean(name = "batchPlatformTransactionManager")
 //    @Primary
-    public PlatformTransactionManager batchPlatformTransactionManager() {
+    PlatformTransactionManager batchPlatformTransactionManager() {
 	return new DataSourceTransactionManager(batchDataSource);
     }
 
     @Bean
-    public BatchConfigurer configurer() {
+    BatchConfigurer configurer() {
 	return new DefaultBatchConfigurer(batchDataSource);
     }
 }

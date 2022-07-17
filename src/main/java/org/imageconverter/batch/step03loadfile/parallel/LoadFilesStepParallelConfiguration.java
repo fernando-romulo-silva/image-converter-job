@@ -18,7 +18,6 @@ import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,35 +33,23 @@ public class LoadFilesStepParallelConfiguration {
 
     private final StepBuilderFactory stepBuilderFactory;
 
-    @Autowired
     LoadFilesStepParallelConfiguration(final StepBuilderFactory stepBuilderFactory) {
 	super();
 	this.stepBuilderFactory = stepBuilderFactory;
     }
 
-    @Bean("loadFilesStepParalell")
+    @Bean
     Step loadFilesStepParalell( //
-		    final Step loadFilesStepParalellSlave, //
+		    final ItemReader<ImageFileLoad> paralellItemReader, //
+		    final ItemProcessor<ImageFileLoad, Image> loadFileProcessor, //
+		    final ItemWriter<Image> loadFileWriter, //
+		    final PlatformTransactionManager transactionManager,
+		    //
 		    final Partitioner partitioner, //
 		    final ThreadPoolTaskExecutor taskExecutor //
     ) {
 
-	return this.stepBuilderFactory //
-			.get(LOAD_FILE_STEP_PARALELL) //
-			.partitioner(LOAD_FILES_STEP_PARALELL_SLAVE, partitioner) //
-			.step(loadFilesStepParalellSlave) //
-			.taskExecutor(taskExecutor) //
-			.build();
-    }
-
-    @Bean("loadFilesStepParalellSlave")
-    Step loadFilesStepParalellSlave( //
-		    final ItemReader<ImageFileLoad> paralellItemReader, //
-		    final ItemProcessor<ImageFileLoad, Image> loadFileProcessor, //
-		    final ItemWriter<Image> loadFileWriter, //
-		    final PlatformTransactionManager transactionManager) {
-
-	return this.stepBuilderFactory //
+	final var loadFilesStepParalellSlave = this.stepBuilderFactory //
 			.get(LOAD_FILES_STEP_PARALELL_SLAVE) //
 			//
 			.transactionManager(transactionManager) //
@@ -73,10 +60,17 @@ public class LoadFilesStepParallelConfiguration {
 			.writer(loadFileWriter) //
 			//
 			.build();
+
+	return this.stepBuilderFactory //
+			.get(LOAD_FILE_STEP_PARALELL) //
+			.partitioner(LOAD_FILES_STEP_PARALELL_SLAVE, partitioner) //
+			.step(loadFilesStepParalellSlave) //
+			.taskExecutor(taskExecutor) //
+			.build();
     }
 
     @Bean
-    public ThreadPoolTaskExecutor taskExecutor() {
+    ThreadPoolTaskExecutor taskExecutor() {
 	final var taskExecutor = new ThreadPoolTaskExecutor();
 	taskExecutor.setThreadGroupName("parallelThreadPoolTaskExecutor");
 	taskExecutor.setMaxPoolSize(10);
@@ -88,7 +82,7 @@ public class LoadFilesStepParallelConfiguration {
 
     @Bean
     @StepScope
-    public Partitioner partitioner(//
+    Partitioner partitioner(//
 
 		    @Value("#{jobParameters['fileName']}") //
 		    final String fileName, //

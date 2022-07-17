@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step03loadfile.parallel.LoadFilesStepParallelConfiguration;
-import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
+import org.imageconverter.batch.step03loadfile.parallel.ParalellItemReader;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -51,9 +51,9 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			// Configs
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, //
 			//
-			// Fourth Step A: LoadFileSerial
+			// Fourth Step 3.2: LoadFileParallel
 			LoadFileProcessor.class, LoadFileSetMapper.class, LoadFileWriter.class, //
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, SerialItemReader.class,
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, ParalellItemReader.class,
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })

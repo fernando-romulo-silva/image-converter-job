@@ -51,7 +51,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			// Configs
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, //
 			//
-			// Fourth Step A: LoadFileSerial
+			// Fourth Step 3.1: LoadFileSerial
 			LoadFileProcessor.class, LoadFileSetMapper.class, LoadFileWriter.class, //
 			LoadFilesStepConfiguration.class, LoadFilesStepSerialConfiguration.class, SerialItemReader.class
 

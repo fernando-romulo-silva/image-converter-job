@@ -13,7 +13,6 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.AbstractLineTokenizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SerialItemReader extends FlatFileItemReader<ImageFileLoad> {
 
-    @Autowired
     SerialItemReader( //
 		    @Value("#{jobParameters['fileName']}") //
 		    final String fileName, //

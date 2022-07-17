@@ -8,7 +8,6 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.AbstractLineTokenizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParalellItemReader extends FlatFileItemReader<ImageFileLoad> {
     
-    @Autowired
     ParalellItemReader( //
 		    @Value("#{stepExecutionContext['fileName']}") // 
 		    final String fileName, //

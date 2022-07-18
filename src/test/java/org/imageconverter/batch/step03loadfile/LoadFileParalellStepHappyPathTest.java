@@ -17,6 +17,7 @@ import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.BatchProcessingFileRepository;
+import org.imageconverter.domain.Image;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -81,15 +82,16 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
 
 	// given
 	final var qtImages = imagesDTO.stream().count();
-
-
+	
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_PARALELL, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
+	
+	final var dbList = entityManager.createQuery(Image.class, "Select i Image i").getResultList();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(splitFileSize.intValue() + 1); 
+	assertThat(actualStepExecutions.size()).isEqualTo(splitFileSize.intValue() + 1); // qtdy file == number of executions
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
     }
 

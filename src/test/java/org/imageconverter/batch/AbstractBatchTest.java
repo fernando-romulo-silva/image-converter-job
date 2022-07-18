@@ -121,7 +121,6 @@ public abstract class AbstractBatchTest {
 
 	final var imagesList = Arrays.asList(images);
 	final var imagesListsGroups = Lists.partition(imagesList, splitFileSize.intValue());
-
 	var filePos = 0;
 	var i = 1L;
 	

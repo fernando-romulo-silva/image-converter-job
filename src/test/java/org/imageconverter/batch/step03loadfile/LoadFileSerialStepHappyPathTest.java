@@ -104,7 +104,7 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
+	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE); // one step execution
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
     }

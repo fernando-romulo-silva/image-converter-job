@@ -1,10 +1,12 @@
 package org.imageconverter.batch.step03loadfile;
 
+import static java.math.RoundingMode.UP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.LOAD_FILE_STEP_PARALELL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
-@TestPropertySource(properties = "application.split-file-size=2")
+@TestPropertySource(properties = "application.split-file-size=4")
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
@@ -61,7 +63,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestInstance(Lifecycle.PER_CLASS)
 class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
     
-    private List<Map.Entry<Long, String>> imagesDTO;
+    private List<Map.Entry<String, String>> imagesDTO;
 
     @BeforeAll
     void beforeAll() throws IOException {
@@ -81,18 +83,25 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
     void executeLoadFileSerialStep() throws IOException {
 
 	// given
-	final var qtImages = imagesDTO.stream().count();
+	final var qtyFiles = new BigDecimal(images.length).divide(new BigDecimal(splitFileSize), UP).intValue();
+	final var idImagesList = imagesDTO.stream().map( i -> i.getKey()).toList();
+	final var nameImagesList = imagesDTO.stream().map( i -> i.getValue()).toList();
 	
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_PARALELL, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 	
-	final var dbList = entityManager.createQuery(Image.class, "Select i Image i").getResultList();
-
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(splitFileSize.intValue() + 1); // qtdy file == number of executions
+	assertThat(actualStepExecutions.size()).isEqualTo(qtyFiles + 1); // qtdy file == number of executions + Main Thread
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
+	
+	@SuppressWarnings("unchecked")
+	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
+
+	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
+	assertThat(dbList).map(d -> d.getId()).containsAll(idImagesList);
+	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
     }
 
 }

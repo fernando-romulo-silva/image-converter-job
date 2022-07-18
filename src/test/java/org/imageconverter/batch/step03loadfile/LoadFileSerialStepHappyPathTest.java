@@ -22,6 +22,7 @@ import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.BatchProcessingFileRepository;
+import org.imageconverter.domain.Image;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -67,7 +68,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestInstance(Lifecycle.PER_CLASS)
 class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
     
-    private List<Map.Entry<Long, String>> imagesDTO;
+    private List<Map.Entry<String, String>> imagesDTO;
 
     @BeforeAll
     void beforeAll() throws IOException {
@@ -96,7 +97,8 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
     void executeLoadFileSerialStep() throws IOException {
 	
 	// given
-	final var qtImages = imagesDTO.stream().count();
+	final var idImagesList = imagesDTO.stream().map( i -> i.getKey()).toList();
+	final var nameImagesList = imagesDTO.stream().map( i -> i.getValue()).toList();
 
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_SERIAL, defaultJobParameters());
@@ -106,6 +108,13 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
 	// then
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE); // one step execution
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
+	
+	@SuppressWarnings("unchecked")
+	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
+
+	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
+	assertThat(dbList).map(d -> d.getId()).containsAll(idImagesList);
+	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
 
     }
 }

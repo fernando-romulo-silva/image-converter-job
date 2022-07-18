@@ -70,11 +70,11 @@ public abstract class AbstractBatchTest {
 
     protected String fileName = "2022-04-24_10-29_DBRGA.txt";
     
-    protected List<Entry<Long, String>> createBatchFile() throws IOException {
+    protected List<Entry<String, String>> createBatchFile() throws IOException {
 	
 	var i = 1L;
 	
-	final var result = new ArrayList<Entry<Long, String>>();
+	final var result = new ArrayList<Entry<String, String>>();
 
 	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
 
@@ -95,7 +95,7 @@ public abstract class AbstractBatchTest {
 		writer.write(line);
 		writer.newLine();
 		
-		result.add(new SimpleEntry<>(imageFileId, imageFileName));
+		result.add(new SimpleEntry<>(String.valueOf(imageFileId), imageFileName));
 
 		i++;
 	    }
@@ -104,9 +104,9 @@ public abstract class AbstractBatchTest {
 	return result;
     }
     
-    protected List<Entry<Long, String>> createSpliptedBatchFile() throws IOException {
+    protected List<Entry<String, String>> createSpliptedBatchFile() throws IOException {
 	
-	final var result = new ArrayList<Entry<Long, String>>();
+	final var result = new ArrayList<Entry<String, String>>();
 	
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
 
@@ -147,7 +147,7 @@ public abstract class AbstractBatchTest {
 
 		    i++;
 		    
-		    result.add(new SimpleEntry<>(imageFileId, imageFileName));
+		    result.add(new SimpleEntry<>(String.valueOf(imageFileId), imageFileName));
 		}
 	    }
 	    

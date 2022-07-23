@@ -12,13 +12,13 @@ public class AppProperties {
 
     @Bean(name = "domainJpaMap")
     @ConfigurationProperties(prefix = "spring.jpa")
-    public Map<String, String> domainJpaMap() {
+    Map<String, String> domainJpaMap() {
 	return new LinkedHashMap<>();
     }
 
     @Bean(name = "domainDataSourceMap")
     @ConfigurationProperties(prefix = "spring.datasource")
-    public Map<String, String> domainDataSourceMap() {
+    Map<String, String> domainDataSourceMap() {
 	return new LinkedHashMap<>();
     }
 }

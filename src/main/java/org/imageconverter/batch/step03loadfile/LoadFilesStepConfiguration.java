@@ -14,17 +14,17 @@ import org.springframework.context.annotation.Configuration;
 public class LoadFilesStepConfiguration {
     
     @Bean
-    public SkipPolicy fileVerificationSkipper() {
+    SkipPolicy fileVerificationSkipper() {
 	return new BatchSkipPolicy();
     }
 
     @Bean
-    public SimpleRecordSeparatorPolicy blankLineRecordSeparatorPolicy() {
+    SimpleRecordSeparatorPolicy blankLineRecordSeparatorPolicy() {
 	return new RecordSepartatorPolicy();
     }
 
     @Bean
-    public FixedLengthTokenizer imageFileFixedLength() {
+    FixedLengthTokenizer imageFileFixedLength() {
 	final var tokenizer = new FixedLengthTokenizer();
 
 	tokenizer.setNames( //
@@ -45,7 +45,7 @@ public class LoadFilesStepConfiguration {
     }
 
     @Bean
-    public DelimitedLineTokenizer imageFileDelimitedTokenizer() {
+    DelimitedLineTokenizer imageFileDelimitedTokenizer() {
 	final var tokenizer = new DelimitedLineTokenizer(";");
 
 	tokenizer.setNames( //

@@ -11,7 +11,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
     private final Long splitFileSize;
 
-    @Autowired
     SplitFileStepExecutionDecider( //
 		    @Value("${application.split-file-size}") //
 		    final Long splitFileSize) {

@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,6 @@ public class PersistenceJpaConfig {
 
     private final Map<String, String> domainJpaMap;
 
-    @Autowired
     PersistenceJpaConfig( //
 		    @Qualifier("domainDataSource") //
 		    final DataSource domainDataSource, //
@@ -38,7 +36,7 @@ public class PersistenceJpaConfig {
     }
 
     @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 	final var emf = new LocalContainerEntityManagerFactoryBean();
 	emf.setDataSource(domainDataSource);
 	emf.setPackagesToScan("org.imageconverter");
@@ -55,7 +53,7 @@ public class PersistenceJpaConfig {
 
     @Primary
     @Bean(name = "jpaTransactionManger")
-    public JpaTransactionManager jpaTransactionManger() {
+    JpaTransactionManager jpaTransactionManger() {
 	final var tm = new JpaTransactionManager();
 	tm.setDataSource(domainDataSource);
 	return tm;

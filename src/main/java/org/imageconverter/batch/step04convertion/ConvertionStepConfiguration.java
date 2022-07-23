@@ -5,7 +5,6 @@ import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 import org.imageconverter.domain.Image;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -15,14 +14,13 @@ public class ConvertionStepConfiguration {
     
     private final StepBuilderFactory stepBuilderFactory;
     
-    @Autowired
     ConvertionStepConfiguration(final StepBuilderFactory stepBuilderFactory) {
 	super();
 	this.stepBuilderFactory = stepBuilderFactory;
     }
     
     @Bean
-    public Step convertionStep( //
+    Step convertionStep( //
 //		    final ItemReader<Image> convertionItemReader, //
 //		    final ItemProcessor<Image, Image> convertionProcessor, //
 //		    final ItemWriter<Image> convertionWriter, //

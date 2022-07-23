@@ -3,7 +3,6 @@ package org.imageconverter.config;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +13,6 @@ public class BatchCommandLineRunner implements CommandLineRunner {
 
     private final Job job;
 
-    @Autowired
     BatchCommandLineRunner(final JobLauncher jobLauncher, final Job job) {
 	super();
 	this.jobLauncher = jobLauncher;

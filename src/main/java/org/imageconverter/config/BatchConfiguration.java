@@ -90,11 +90,11 @@ public class BatchConfiguration {
     }
 
 //    @Bean
-//    public JobParameters getJobParameters() {
+//    JobParameters getJobParameters() {
 //	final var jobParametersBuilder = new JobParametersBuilder();
 //	    
 //	jobParametersBuilder.addString("fileName", <dest_from_cmd_line);
-////	jobParametersBuilder.addDate("date", <date_from_cmd_line>);
+//	jobParametersBuilder.addDate("date", <date_from_cmd_line>);
 //	return jobParametersBuilder.toJobParameters();
 //    }
 

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -60,9 +59,6 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 
     @BeforeAll
     void beforeAll() throws IOException {
-
-	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-
 	createBatchFile();
     }
 

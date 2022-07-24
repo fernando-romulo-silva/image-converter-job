@@ -37,7 +37,7 @@ public abstract class AbstractBatchTest {
     @Autowired
     protected JobLauncherTestUtils jobLauncherTestUtils;
 
-//    @Autowired
+    @Autowired
     protected JobRepositoryTestUtils jobRepositoryTestUtils;
 
     @Autowired

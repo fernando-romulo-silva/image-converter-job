@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -68,7 +67,7 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
     @BeforeAll
     void beforeAll() throws IOException {
 
-	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+//	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
 	createBatchFile();
 

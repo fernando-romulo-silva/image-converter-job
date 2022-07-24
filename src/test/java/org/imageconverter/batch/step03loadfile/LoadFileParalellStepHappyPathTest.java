@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -68,8 +67,6 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
     @BeforeAll
     void beforeAll() throws IOException {
 
-	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-	
 	imagesDTO = createSpliptedBatchFile();
     }
 
@@ -103,5 +100,4 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
 	assertThat(dbList).map(d -> d.getId()).containsAll(idImagesList);
 	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
     }
-
 }

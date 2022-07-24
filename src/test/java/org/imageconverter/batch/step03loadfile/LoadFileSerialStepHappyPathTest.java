@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -73,8 +72,6 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
     @BeforeAll
     void beforeAll() throws IOException {
 
-	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-
 	imagesDTO = createBatchFile();
 
 	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
@@ -115,6 +112,5 @@ class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
 	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
 	assertThat(dbList).map(d -> d.getId()).containsAll(idImagesList);
 	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
-
     }
 }

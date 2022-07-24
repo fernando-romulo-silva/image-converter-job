@@ -39,6 +39,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
@@ -62,13 +63,14 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
+@TestPropertySource(properties = "application.split-file-size=4")
 //
 @TestInstance(Lifecycle.PER_CLASS)
 public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
-    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8443));
+    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8989));
     
     @BeforeAll
     void beforeAll() throws IOException {

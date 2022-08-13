@@ -3,6 +3,7 @@ package org.imageconverter.batch.step04convertion;
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 
 import org.imageconverter.domain.Image;
+import org.imageconverter.util.http.ConvertImageClient;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,12 @@ public class ConvertionStepConfiguration {
     
     private final StepBuilderFactory stepBuilderFactory;
     
-    ConvertionStepConfiguration(final StepBuilderFactory stepBuilderFactory) {
+    private final ConvertImageClient convertImageClient;
+    
+    ConvertionStepConfiguration(final StepBuilderFactory stepBuilderFactory, final ConvertImageClient convertImageClient) {
 	super();
 	this.stepBuilderFactory = stepBuilderFactory;
+	this.convertImageClient = convertImageClient;
     }
     
     @Bean

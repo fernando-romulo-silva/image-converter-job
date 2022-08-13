@@ -28,7 +28,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfiguration {
 
     public static final String CONVERT_IMAGE_JOB = "convertImageJob";
-    
+
     public static final String MOVE_FILE_STEP = "moveFileStep";
     public static final String SPLIT_FILE_STEP = "splitFileStep";
     public static final String LOAD_FILE_STEP_PARALELL = "loadFilesStepParalell";
@@ -72,21 +72,20 @@ public class BatchConfiguration {
 			//
 			.next(splitFileStepExecutionDecider) // check if it needs split the file
 			/*--*/.from(splitFileStepExecutionDecider) //
-			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) // Let split it 
+			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) // Let split it
 			/*----------*/.to(splitFileStep) // split it!
 			/*----------*/.next(loadFilesStepParalell) // load in paralell
-			/*--*/.from(splitFileStepExecutionDecider) // 
-			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL)// We don't need split
+			/*--*/.from(splitFileStepExecutionDecider) //
+			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL) // We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
 			//
 			.from(moveFileStep) // back to root path
 			.next(convertionStep)
-			//			
+			//
 //			.next(convertionStep) //
-			//.next(deleteSplitedStep) //
-			//.next(finalizeStep) //
-			.end()
-			.build();
+			// .next(deleteSplitedStep) //
+			// .next(finalizeStep) //
+			.end().build();
     }
 
 //    @Bean

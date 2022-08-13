@@ -9,7 +9,7 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import java.io.IOException;
 
@@ -45,6 +45,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
@@ -77,8 +78,14 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
-	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/con_ppwnextel-war/WSConsultaSaldo?wsdl")) //
-			.withRequestBody(containing("<ns1:consultaSaldoFuturo xmlns:ns1=\"http://service.console.ppware.com.br/\">")) //
+	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
+			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
+			.withHeader("Content-Type", containing("multipart/form-data;"))
+			.withHeader("Content-Length", containing("123674"))
+			.withMultipartRequestBody(
+			                    aMultipart()
+			                    .withBody(null)
+			                )
 			.willReturn( //
 					aResponse() //
 							.withStatus(200) //

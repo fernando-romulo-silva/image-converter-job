@@ -59,7 +59,16 @@ spring:
                         mode: ENABLE_SELECTIVE
                     sharedCache:
                         mode: ENABLE_SELECTIVE
-                        
 #============ Logging =======================================================================================
 # logging.level.root: DEBUG
+
+
+#============ Open Feigh ====================================================================================
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
 

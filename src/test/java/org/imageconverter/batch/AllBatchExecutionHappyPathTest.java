@@ -20,7 +20,7 @@ import org.imageconverter.batch.step03loadfile.parallel.LoadFilesStepParallelCon
 import org.imageconverter.batch.step03loadfile.parallel.ParalellItemReader;
 import org.imageconverter.batch.step03loadfile.serial.LoadFilesStepSerialConfiguration;
 import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
-import org.imageconverter.batch.step04convertion.ConvertionStepConfiguration;
+import org.imageconverter.batch.step04conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;

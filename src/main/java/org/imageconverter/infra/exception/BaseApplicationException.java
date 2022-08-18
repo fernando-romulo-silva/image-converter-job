@@ -8,6 +8,14 @@ package org.imageconverter.infra.exception;
 public class BaseApplicationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * Constructs a new BaseApplicationException exception.
+     * 
+     */
+    public BaseApplicationException() {
+	super();
+    }
 
     /**
      * Constructs a new BaseApplicationException exception with the specified detail message.

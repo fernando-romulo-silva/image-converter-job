@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step04convertion;
+package org.imageconverter.batch.step04conversion;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.nio.charset.Charset.forName;
@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
+import org.imageconverter.batch.step04conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;

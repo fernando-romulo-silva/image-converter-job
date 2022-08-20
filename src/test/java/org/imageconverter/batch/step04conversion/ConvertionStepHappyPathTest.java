@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
-import org.imageconverter.batch.step04conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
@@ -57,7 +56,7 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, //
 			//
 			// Fourth Step
-			ConvertionStepConfiguration.class
+			ConvertionItemWriter.class, ConversionItemProcessor.class, ConversionItemReader.class, ConvertionStepConfiguration.class
 
 		} //
 )

@@ -3,10 +3,11 @@ package org.imageconverter.batch.step04conversion;
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 
 import org.imageconverter.domain.Image;
-import org.imageconverter.util.http.ConvertImageClient;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -16,8 +17,6 @@ public class ConvertionStepConfiguration {
     
     private final StepBuilderFactory stepBuilderFactory;
     
-    private ConvertImageClient convertImageClient;
-    
     ConvertionStepConfiguration(final StepBuilderFactory stepBuilderFactory) {
 	super();
 	this.stepBuilderFactory = stepBuilderFactory;
@@ -26,8 +25,8 @@ public class ConvertionStepConfiguration {
     @Bean
     Step convertionStep( //
 		    final ItemReader<Image> conversionItemReader, //
-//		    final ItemProcessor<Image, Image> convertionProcessor, //
-//		    final ItemWriter<Image> convertionWriter, //
+		    final ItemProcessor<Image, Image> conversionItemProcessor, //
+		    final ItemWriter<Image> convertionItemWriter, //
 
 		    final PlatformTransactionManager transactionManager) {
 
@@ -38,14 +37,9 @@ public class ConvertionStepConfiguration {
 			.<Image, Image>chunk(1000) //
 			//
 			.reader(conversionItemReader) //
-//			.processor(convertionProcessor) //
-//			.writer(convertionWriter) //
-			//
-//			.processor(i -> j) //
-			.writer(i -> System.out.println()) //
+			.processor(conversionItemProcessor) //
+			.writer(convertionItemWriter) //
 			//
 			.build();
-			
-			
     }
 }

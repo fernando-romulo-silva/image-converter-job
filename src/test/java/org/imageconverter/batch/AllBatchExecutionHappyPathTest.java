@@ -20,6 +20,9 @@ import org.imageconverter.batch.step03loadfile.parallel.LoadFilesStepParallelCon
 import org.imageconverter.batch.step03loadfile.parallel.ParalellItemReader;
 import org.imageconverter.batch.step03loadfile.serial.LoadFilesStepSerialConfiguration;
 import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
+import org.imageconverter.batch.step04conversion.ConversionItemProcessor;
+import org.imageconverter.batch.step04conversion.ConversionItemReader;
+import org.imageconverter.batch.step04conversion.ConvertionItemWriter;
 import org.imageconverter.batch.step04conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
@@ -47,6 +50,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
@@ -56,7 +60,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, //
+			//
+			// Batch
+			BatchConfiguration.class, //
 			//
 			// First Step
 			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
@@ -69,7 +76,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			LoadFileSetMapper.class, SerialItemReader.class, ParalellItemReader.class, LoadFileProcessor.class, LoadFileWriter.class, //
 			//
 			// Fourth Step
-			ConvertionStepConfiguration.class
+			ConvertionStepConfiguration.class, ConvertionItemWriter.class, ConversionItemProcessor.class, ConversionItemReader.class, //
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -77,6 +84,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 //
+@TestPropertySource(properties = "application.split-file-size=0")
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
 class AllBatchExecutionHappyPathTest extends AbstractBatchTest {

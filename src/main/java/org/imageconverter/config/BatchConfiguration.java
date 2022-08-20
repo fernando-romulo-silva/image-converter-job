@@ -65,7 +65,7 @@ public class BatchConfiguration {
 //		    final Step finalizeStep,
 		    final JobExecutionDecider splitFileStepExecutionDecider//
     ) {
-
+	
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //
 			.start(moveFileStep) // move file to processing's folder
@@ -75,16 +75,14 @@ public class BatchConfiguration {
 			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) // Let split it
 			/*----------*/.to(splitFileStep) // split it!
 			/*----------*/.next(loadFilesStepParalell) // load in paralell
+			/*----------*/.next(convertionStep) // back to root path
 			/*--*/.from(splitFileStepExecutionDecider) //
 			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL) // We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
+			/*----------*/.next(convertionStep) // back to root path
 			//
-			.from(moveFileStep) // back to root path
-			.next(convertionStep)
-			//
-//			.next(convertionStep) //
-			// .next(deleteSplitedStep) //
-			// .next(finalizeStep) //
+			//.next(deleteSplitedStep) //
+			//.next(finalizeStep) //
 			.end().build();
     }
 
@@ -122,7 +120,6 @@ public class BatchConfiguration {
     }
 
     @Bean(name = "batchPlatformTransactionManager")
-//    @Primary
     PlatformTransactionManager batchPlatformTransactionManager() {
 	return new DataSourceTransactionManager(batchDataSource);
     }

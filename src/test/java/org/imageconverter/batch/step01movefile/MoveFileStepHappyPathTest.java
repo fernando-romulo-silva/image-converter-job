@@ -15,6 +15,7 @@ import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
+import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -42,10 +43,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class,
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// First Step: MoveFileStep
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
+			MoveFileTasklet.class, MoveFileStepConfiguration.class, //
 		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
@@ -74,10 +75,10 @@ class MoveFileStepHappyPathTest extends AbstractBatchTest {
 	// given
 	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
-	
+
 	final var actualFileLocation = new FileSystemResource(Paths.get(inputFolderAbsolutePath.toString() + separator + fileName));
 	final var expectedFileLocation = new FileSystemResource(Paths.get(processingAbsolutePath.toString() + separator + fileName));
-	
+
 	assertThat(actualFileLocation.exists()).isTrue();
 	assertThat(expectedFileLocation.exists()).isFalse();
 

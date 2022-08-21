@@ -7,7 +7,6 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import java.io.IOException;
 
 import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
-import org.imageconverter.batch.step01movefile.MoveFileStepLoggingListener;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
@@ -29,6 +28,7 @@ import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.BatchProcessingFileRepository;
+import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -60,13 +60,13 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, DefaultStepListener.class, //
 			//
 			// Batch
 			BatchConfiguration.class, //
 			//
 			// First Step
-			MoveFileStepLoggingListener.class, MoveFileTasklet.class, MoveFileStepConfiguration.class, //
+			MoveFileTasklet.class, MoveFileStepConfiguration.class, //
 			//
 			// Second Step
 			SplitFileStepConfiguration.class, SplitFileTasklet.class, SplitFileStepExecutionDecider.class, //

@@ -1,5 +1,6 @@
 package org.imageconverter.batch.step02splitfile;
 
+import org.imageconverter.util.DefaultStepListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -17,9 +18,10 @@ public class SplitFileStepConfiguration {
     }
 
     @Bean
-    Step splitFileStep(final Tasklet splitFileTasklet) {
+    Step splitFileStep(final Tasklet splitFileTasklet, final DefaultStepListener defaultStepListener) {
 
 	return this.stepBuilderFactory.get("splitFileStep") //
+			.listener(defaultStepListener) //
 			.tasklet(splitFileTasklet) //
 			.build();
     }

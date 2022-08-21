@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.imageconverter.domain.Image;
 import org.imageconverter.infra.ImageFileLoad;
+import org.imageconverter.util.DefaultStepListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -45,15 +46,18 @@ public class LoadFilesStepParallelConfiguration {
 		    final ItemWriter<Image> loadFileWriter, //
 		    final PlatformTransactionManager transactionManager,
 		    //
+		    @Value("${application.chunk-size}") //
+		    final Integer chunkSize, //
 		    final Partitioner partitioner, //
-		    final ThreadPoolTaskExecutor taskExecutor //
-    ) {
+		    final DefaultStepListener defaultStepListener,
+		    final ThreadPoolTaskExecutor taskExecutor) {
 
 	final var loadFilesStepParalellSlave = this.stepBuilderFactory //
 			.get(LOAD_FILES_STEP_PARALELL_SLAVE) //
+			.listener(defaultStepListener) //
 			//
 			.transactionManager(transactionManager) //
-			.<ImageFileLoad, Image>chunk(1000) //
+			.<ImageFileLoad, Image>chunk(chunkSize) //
 			//
 			.reader(paralellItemReader) //
 			.processor(loadFileProcessor) //
@@ -83,10 +87,9 @@ public class LoadFilesStepParallelConfiguration {
     @Bean
     @StepScope
     Partitioner partitioner(//
-
 		    @Value("#{jobParameters['fileName']}") //
 		    final String fileName, //
-
+		    //
 		    @Value("${application.batch-folders.processing-files}") //
 		    final Resource processingFolder //
 

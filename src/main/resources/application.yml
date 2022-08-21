@@ -15,7 +15,10 @@ application:
         processing-files: file:${PROCESSING_FILE_FOLDER}
         processed-files: file:${PROCESSED_FILE_FOLDER}
    
-    split-file-size: ${SPLIT_FILE_SIZE}        
+    split-file-size: ${SPLIT_FILE_SIZE}
+    
+    chunk-size: ${CHUNK_SIZE:50}
+    pagination-size: ${PAGINATION_SIZE:50}        
 
 #============== Spring ==============================================================================
 spring:

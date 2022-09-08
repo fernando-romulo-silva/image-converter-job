@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step04conversion;
+package org.imageconverter.batch.step05conversion;
 
 import java.util.Collections;
 
@@ -32,7 +32,8 @@ public class ConversionItemReader extends JpaPagingItemReader<Image> {
 
 	final var sql = """ 
 			select *
-			  from IMAGE_BATCH		
+			  from IMAGE_BATCH
+			 where IMG_ID >= :limit		
 			""";
 	
 	 //"select * from IMAGE_BATCH where IMG_ID >= :limit";

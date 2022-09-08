@@ -40,7 +40,10 @@ public class SplitFileTasklet extends SystemCommandTasklet {
 	this.fileName = newFileName;
 	this.splitFileSize = newSplitFileSize;
 	this.processingFolder = newProcessingFolder;
-
+	
+	stop(); // stop until the command's finish
+	setTimeout(5000); // until timeout
+	
 	addCommand();
     }
 
@@ -60,6 +63,5 @@ public class SplitFileTasklet extends SystemCommandTasklet {
 	LOGGER.info("Split command: '{}'", command);
 
 	setCommand(command);
-	setTimeout(5000);
     }
 }

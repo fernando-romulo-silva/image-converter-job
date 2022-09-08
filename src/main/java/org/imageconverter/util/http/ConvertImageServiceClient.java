@@ -5,19 +5,24 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.imageconverter.config.OpenFeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @FeignClient(//
-		value = "jplaceholder", //
-		url = "https://jsonplaceholder.typicode.com/", //
+		value = "image-converter-service", //
+		url = "${application.image-converter-service.url}", //
 		configuration = OpenFeignConfiguration.class //
 )
-public interface ConvertImageClient {
+public interface ConvertImageServiceClient {
 
-    @PostMapping(consumes = { MULTIPART_FORM_DATA_VALUE }, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/rest/images/conversion", consumes = { MULTIPART_FORM_DATA_VALUE }, produces = APPLICATION_JSON_VALUE)
     ImageConverterPostResponse convert(
 		    @RequestParam(name = "file", required = true) //
 		    final ImageConverterRequest request);
+    
+    
+    @GetMapping(value = "/health", produces = APPLICATION_JSON_VALUE)
+    String checkStatus(); 
 }

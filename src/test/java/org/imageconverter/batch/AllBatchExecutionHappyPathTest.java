@@ -19,16 +19,20 @@ import org.imageconverter.batch.step03loadfile.parallel.LoadFilesStepParallelCon
 import org.imageconverter.batch.step03loadfile.parallel.ParalellItemReader;
 import org.imageconverter.batch.step03loadfile.serial.LoadFilesStepSerialConfiguration;
 import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
-import org.imageconverter.batch.step04conversion.ConversionItemProcessor;
-import org.imageconverter.batch.step04conversion.ConversionItemReader;
-import org.imageconverter.batch.step04conversion.ConvertionItemWriter;
-import org.imageconverter.batch.step04conversion.ConvertionStepConfiguration;
+import org.imageconverter.batch.step04checkservicestatus.CheckServiceStatusConfiguration;
+import org.imageconverter.batch.step04checkservicestatus.CheckServiceStatusTasklet;
+import org.imageconverter.batch.step05conversion.ConversionItemProcessor;
+import org.imageconverter.batch.step05conversion.ConversionItemReader;
+import org.imageconverter.batch.step05conversion.ConvertionItemWriter;
+import org.imageconverter.batch.step05conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
+import org.imageconverter.config.OpenFeignConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.BatchProcessingFileRepository;
 import org.imageconverter.util.DefaultStepListener;
+import org.imageconverter.util.http.ConvertImageServiceClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,8 +46,10 @@ import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -60,10 +66,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, DefaultStepListener.class, ConvertImageServiceClient.class, //
 			//
-			// Batch
-			BatchConfiguration.class, //
+			// Special Configs
+			OpenFeignConfiguration.class, BatchConfiguration.class, //
 			//
 			// First Step
 			MoveFileTasklet.class, MoveFileStepConfiguration.class, //
@@ -76,9 +82,13 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			LoadFileSetMapper.class, SerialItemReader.class, ParalellItemReader.class, LoadFileProcessor.class, LoadFileWriter.class, //
 			//
 			// Fourth Step
+			CheckServiceStatusTasklet.class, CheckServiceStatusConfiguration.class,
+			//
+			// Fifth Step
 			ConvertionStepConfiguration.class, ConvertionItemWriter.class, ConversionItemProcessor.class, ConversionItemReader.class, //
 		} //
 )
+@ImportAutoConfiguration({ FeignAutoConfiguration.class})
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)

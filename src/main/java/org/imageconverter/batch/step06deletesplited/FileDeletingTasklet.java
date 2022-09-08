@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step05deletesplited;
+package org.imageconverter.batch.step06deletesplited;
 
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.UnexpectedJobExecutionException;

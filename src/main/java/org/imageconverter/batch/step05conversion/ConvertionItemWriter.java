@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step04conversion;
+package org.imageconverter.batch.step05conversion;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ConvertionItemWriter implements ItemWriter<Image> {
     }
 
     @Override
-    public void write(List<? extends Image> list) throws Exception {
+    public void write(final List<? extends Image> list) throws Exception {
 
 	LOGGER.info("Save '{}' images", list.size());
 

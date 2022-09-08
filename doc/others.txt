@@ -69,3 +69,19 @@ https://github.com/dbalthassat/spring-batch-poc/blob/master/src/main/java/org/db
 
 https://stackoverflow.com/questions/49636717/how-to-pass-arguments-to-a-job-resource-in-kubernetes
 
+-----------------------------------
+
+https://www.google.com/search?q=spring+retry+with+spring+batch&sxsrf=ALiCzsaOK9eDb4AzC9vz9SjGtRnQdHIYBg%3A1662215615928&ei=v2UTY6OmOJSnlwS8u6OICw&oq=spring+retry+spring+batch&gs_lcp=Cgdnd3Mtd2l6EAMYADIGCAAQHhAWOgoIABBHENYEELADOgcIABCwAxBDOgUIABDLAToGCAAQHhANSgQIQRgASgQIRhgAUIoYWOopYI00aAFwAXgAgAHeAYgBtA6SAQYwLjEyLjGYAQCgAQHIAQq4AQPAAQE&sclient=gws-wiz
+
+https://code.likeagirl.io/the-ultimate-beginners-guide-for-spring-batch-error-handling-175aa258ecfa
+
+https://www.baeldung.com/spring-batch-retry-logic
+
+https://docs.spring.io/spring-batch/docs/4.3.x/reference/html/step.html#stepRestart
+
+
+------------------------------------
+
+https://code.likeagirl.io/four-ways-to-scale-spring-batch-3ad5042e0266
+
+

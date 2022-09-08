@@ -18,7 +18,7 @@ import feign.codec.ErrorDecoder;
 
 
 @Configuration
-@EnableFeignClients
+@EnableFeignClients(basePackages = "org.imageconverter.util.http")
 public class OpenFeignConfiguration {
 
 //    @Bean

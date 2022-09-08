@@ -1,4 +1,4 @@
-package org.imageconverter.batch.step04conversion;
+package org.imageconverter.batch.step05conversion;
 
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 

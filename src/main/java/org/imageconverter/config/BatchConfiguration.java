@@ -33,6 +33,7 @@ public class BatchConfiguration {
     public static final String SPLIT_FILE_STEP = "splitFileStep";
     public static final String LOAD_FILE_STEP_PARALELL = "loadFilesStepParalell";
     public static final String LOAD_FILE_STEP_SERIAL = "loadFilesStepSerial";
+    public static final String CHECK_SERVICE_STATUS_STEP = "checkServiceStatusStep";
     public static final String CONVERTION_STEP = "convertionStep";
 
     private final JobBuilderFactory jobBuilderFactory;
@@ -60,7 +61,8 @@ public class BatchConfiguration {
 		    final Step splitFileStep, // Step 2
 		    final Step loadFilesStepSerial, // Step 3.1
 		    final Step loadFilesStepParalell, // Step 3.2
-		    final Step convertionStep, // 4
+		    final Step checkServiceStatusStep, // Step 4
+		    final Step convertionStep, // Step 5
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
 		    final JobExecutionDecider splitFileStepExecutionDecider//
@@ -75,11 +77,14 @@ public class BatchConfiguration {
 			/*-------*/.on(FLOW_STATUS_CONTINUE_PARALELL) // Let split it
 			/*----------*/.to(splitFileStep) // split it!
 			/*----------*/.next(loadFilesStepParalell) // load in paralell
-			/*----------*/.next(convertionStep) // back to root path
+			/*----------*/.next(checkServiceStatusStep)
 			/*--*/.from(splitFileStepExecutionDecider) //
 			/*-------*/.on(FLOW_STATUS_CONTINUE_SERIAL) // We don't need split
 			/*----------*/.to(loadFilesStepSerial) // load in serial
-			/*----------*/.next(convertionStep) // back to root path
+			/*----------*/.next(checkServiceStatusStep) 
+			.from(checkServiceStatusStep) // back to root path
+			.next(convertionStep)
+			
 			//
 			//.next(deleteSplitedStep) //
 			//.next(finalizeStep) //

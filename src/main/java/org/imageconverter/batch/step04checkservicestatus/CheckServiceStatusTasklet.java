@@ -28,6 +28,11 @@ public class CheckServiceStatusTasklet implements Tasklet {
 
 	LOGGER.info("File name: '{}', Max records amount '{}'", contribution);
 	LOGGER.info("Split command: '{}'", chunkContext);
+	
+	
+	final var status = convertImageServiceClient.checkStatus();
+	
+	
 
 	return RepeatStatus.FINISHED;
     }

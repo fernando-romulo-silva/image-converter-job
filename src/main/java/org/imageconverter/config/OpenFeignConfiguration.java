@@ -7,14 +7,20 @@ import org.imageconverter.infra.exception.ConversionAlreadyExistsException;
 import org.imageconverter.infra.exception.ConversionErrorException;
 import org.imageconverter.infra.exception.ConversionServiceUnavaillableException;
 import org.imageconverter.infra.exception.UnexpectedConversionException;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import feign.Logger;
 import feign.Response;
-import feign.auth.BasicAuthRequestInterceptor;
+import feign.codec.Decoder;
 import feign.codec.ErrorDecoder;
+import feign.codec.StringDecoder;
+import feign.jackson.JacksonDecoder;
 
 
 @Configuration
@@ -28,10 +34,21 @@ public class OpenFeignConfiguration {
 //      };
 //    }
     
+//    @Bean
+//    BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
+//        return new BasicAuthRequestInterceptor("username", "password");
+//    }
+    
     @Bean
-    BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
-        return new BasicAuthRequestInterceptor("username", "password");
+    Decoder feignDecoder() {
+	return new StringDecoder();
     }
+    
+//    @Bean
+//    Decoder feignDecoder2() {
+//      return new JacksonDecoder();
+//    }
+    
     
     @Bean
     ErrorDecoder errorDecode( ) {
@@ -59,8 +76,8 @@ public class OpenFeignConfiguration {
 	};
     }
     
-    @Bean
-    Logger.Level feignLoggerLevel() {
-        return Logger.Level.BASIC;
-    }
+//    @Bean
+//    Logger.Level feignLoggerLevel() {
+//        return Logger.Level.HEADERS;
+//    }
 }

@@ -9,6 +9,7 @@ import static java.nio.charset.Charset.forName;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CHECK_SERVICE_STATUS_STEP;
+import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -19,6 +20,7 @@ import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
+import org.imageconverter.config.ImageConverterServiceConst;
 import org.imageconverter.config.OpenFeignConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.BatchProcessingFileRepository;
@@ -51,6 +53,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
+import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
@@ -80,34 +83,27 @@ public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
-    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8989));
+    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8080));
     
     @BeforeAll
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
-	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
-			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
-			.withHeader("Content-Type", containing("multipart/form-data;"))
-			.withHeader("Content-Length", containing("123674"))
-			.withMultipartRequestBody(
-			                    aMultipart()
-			                    .withBody(null)
-			                )
+	WIREMOCK.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
 			.willReturn( //
 					aResponse() //
 							.withStatus(200) //
-							.withHeader("content-type", "text/xml") //
-							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
+							.withHeader("content-type", "text/json") //
+							.withBodyFile("get-health-200.json") //
 			));
 	
-	WIREMOCK.start();
+	 WIREMOCK.start();
     }
 
     @AfterAll
     void afterAll() throws IOException {
-//	WIREMOCK.stop();
+	WIREMOCK.stop();
     }
     
 

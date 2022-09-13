@@ -58,7 +58,7 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class,//
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// Special Configs
 			OpenFeignConfiguration.class,
@@ -68,7 +68,7 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 
 		} //
 )
-@ImportAutoConfiguration({ FeignAutoConfiguration.class})
+@ImportAutoConfiguration({ FeignAutoConfiguration.class })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
@@ -81,7 +81,8 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
     public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8989));
-    
+
+    // #header /rest/images/conversion/1
     @BeforeAll
     void beforeAll() throws IOException {
 
@@ -89,19 +90,16 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 
 	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
 			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
-			.withHeader("Content-Type", containing("multipart/form-data;"))
-			.withHeader("Content-Length", containing("123674"))
-			.withMultipartRequestBody(
-			                    aMultipart()
-			                    .withBody(null)
-			                )
+			.withHeader("Content-Type", containing("multipart/form-data;")) //
+			.withHeader("Content-Length", containing("123674")) //
+			.withMultipartRequestBody(aMultipart().withBody(null))
 			.willReturn( //
 					aResponse() //
 							.withStatus(200) //
 							.withHeader("content-type", "text/xml") //
 							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
 			));
-	
+
 	WIREMOCK.start();
     }
 
@@ -109,7 +107,6 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
     void afterAll() throws IOException {
 	WIREMOCK.stop();
     }
-    
 
     @Test
     @Order(1)

@@ -5,7 +5,7 @@
 #============== Applicaton ===========================================================================
 application:
     image-converter-service:
-        url: http://127.0.0.1:8989 
+        url: http://127.0.0.1:8080 
         user : user
         password : password
             
@@ -48,7 +48,18 @@ spring:
         # EMBEDDED always
         # job.enabled: false
         
-# logging:
-#   level:
-#     root: ERROR
-#     org.springframework.batch: DEBUG
+    logging:
+      level:
+        root: DEBUG
+        org.imageconverter.util.http: DEBUG
+        org.springframework.batch: DEBUG
+
+#============ Open Feigh ====================================================================================
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+
+
+

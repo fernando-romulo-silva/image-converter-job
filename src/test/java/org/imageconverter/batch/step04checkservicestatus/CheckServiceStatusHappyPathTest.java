@@ -1,8 +1,6 @@
 package org.imageconverter.batch.step04checkservicestatus;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.nio.charset.Charset.forName;
@@ -20,9 +18,8 @@ import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
-import org.imageconverter.config.ImageConverterServiceConst;
-import org.imageconverter.config.OpenFeignConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
+import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.BatchProcessingFileRepository;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
@@ -52,8 +49,6 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.matching.ContainsPattern;
-import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)

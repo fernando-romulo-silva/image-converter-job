@@ -19,8 +19,8 @@ import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
-import org.imageconverter.config.OpenFeignConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
+import org.imageconverter.config.openfeign.OpenFeignSecurityConfiguration;
 import org.imageconverter.domain.BatchProcessingFileRepository;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
@@ -61,7 +61,7 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// Special Configs
-			OpenFeignConfiguration.class,
+			OpenFeignSecurityConfiguration.class,
 			//
 			// Fifth Step
 			ConvertionItemWriter.class, ConversionItemProcessor.class, ConversionItemReader.class, ConvertionStepConfiguration.class

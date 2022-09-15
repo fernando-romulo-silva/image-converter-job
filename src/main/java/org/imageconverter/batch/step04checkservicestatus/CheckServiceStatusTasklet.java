@@ -1,6 +1,6 @@
 package org.imageconverter.batch.step04checkservicestatus;
 
-import org.imageconverter.util.http.ConvertImageServiceClient;
+import org.imageconverter.util.http.ActuatorServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepContribution;
@@ -16,11 +16,11 @@ public class CheckServiceStatusTasklet implements Tasklet {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    private final ConvertImageServiceClient convertImageServiceClient;
+    private final ActuatorServiceClient actuatorServiceClient;
 
-    CheckServiceStatusTasklet(final ConvertImageServiceClient convertImageServiceClient) {
+    CheckServiceStatusTasklet(final ActuatorServiceClient convertImageServiceClient) {
 	super();
-	this.convertImageServiceClient = convertImageServiceClient;
+	this.actuatorServiceClient = convertImageServiceClient;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	LOGGER.info("Split command: '{}'", chunkContext);
 	
 	
-	final var status = convertImageServiceClient.checkStatus();
+	final var status = actuatorServiceClient.checkStatus();
 	
 	
 

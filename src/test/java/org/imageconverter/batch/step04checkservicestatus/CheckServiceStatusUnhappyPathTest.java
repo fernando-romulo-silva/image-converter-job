@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CHECK_SERVICE_STATUS_STEP;
 import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
-import static org.springframework.batch.core.ExitStatus.COMPLETED;
+import static org.springframework.batch.core.ExitStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
@@ -56,7 +56,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class,//
 			//
 			// Special Configs
 			OpenFeignConfiguration.class,
@@ -66,7 +66,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 
 		} //
 )
-@ImportAutoConfiguration({ FeignAutoConfiguration.class })
+@ImportAutoConfiguration({ FeignAutoConfiguration.class})
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
@@ -74,12 +74,12 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestPropertySource(properties = "application.split-file-size=4")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
+public class CheckServiceStatusUnhappyPathTest extends AbstractBatchTest {
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
     public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8080));
-
+    
     @BeforeAll
     void beforeAll() throws IOException {
 
@@ -88,18 +88,19 @@ public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
 	WIREMOCK.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
 			.willReturn( //
 					aResponse() //
-							.withStatus(200) //
+							.withStatus(503) //
 							.withHeader("content-type", "text/json") //
-							.withBodyFile("get-health-200.json") //
+							.withBodyFile("get-health-503.json") //
 			));
-
-	WIREMOCK.start();
+	
+	 WIREMOCK.start();
     }
 
     @AfterAll
     void afterAll() throws IOException {
 	WIREMOCK.stop();
     }
+    
 
     @Test
     @Order(1)
@@ -114,6 +115,6 @@ public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
 
 	// then
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
-	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
+	assertThat(actualJobExitStatus.getExitCode()).contains(FAILED.getExitCode());
     }
 }

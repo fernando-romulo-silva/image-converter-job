@@ -67,7 +67,10 @@ public abstract class AbstractBatchTest {
     
     @Value("${application.split-file-size}")
     protected Long splitFileSize;    
-
+    
+    @Value("${application.image-converter-service.url}") 
+    protected String serverURL;
+    
     protected String fileName = "2022-04-24_10-29_DBRGA.txt";
     
     protected List<Entry<String, String>> createBatchFile() throws IOException {

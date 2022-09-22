@@ -1,6 +1,7 @@
 package org.imageconverter.config.openfeign;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,8 +20,13 @@ public class OpenFeignConfiguration extends AbstractOpenFeignConfiguration {
 //      };
 //    }
     
+//    @Bean
+//    Decoder feignDecoder() {
+//	return new StringDecoder();
+//    }
+    
     @Bean
     Decoder feignDecoder() {
-	return new StringDecoder();
+	return new ResponseEntityDecoder(new StringDecoder());
     }
 }

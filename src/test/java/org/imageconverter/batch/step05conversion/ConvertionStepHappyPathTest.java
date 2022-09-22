@@ -13,6 +13,7 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
@@ -97,6 +98,7 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 					aResponse() //
 							.withStatus(200) //
 							.withHeader("content-type", "text/xml") //
+							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
 							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
 			));
 
@@ -113,9 +115,9 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
     void executeLoadFileSerialStep() throws IOException {
 
 	// given
+	final var jobExecution = jobLauncherTestUtils.launchStep(CONVERTION_STEP, defaultJobParameters());
 
 	// when
-	final var jobExecution = jobLauncherTestUtils.launchStep(CONVERTION_STEP, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 

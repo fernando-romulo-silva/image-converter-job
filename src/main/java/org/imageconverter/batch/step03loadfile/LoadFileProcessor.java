@@ -15,7 +15,7 @@ public class LoadFileProcessor implements ItemProcessor<ImageFileLoad, Image> {
 
     private final BatchProcessingFile batchProcessingFile;
 
-    public LoadFileProcessor( //
+    LoadFileProcessor( //
 
 		    final BatchProcessingFileRepository batchProcessingFileRepository, //
 

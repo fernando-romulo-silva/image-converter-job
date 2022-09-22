@@ -3,15 +3,14 @@ package org.imageconverter.batch.step04checkservicestatus;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static java.nio.charset.Charset.forName;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CHECK_SERVICE_STATUS_STEP;
 import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
@@ -37,13 +36,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
@@ -71,34 +68,36 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
-@TestPropertySource(properties = "application.split-file-size=4")
 //
 @TestInstance(Lifecycle.PER_CLASS)
 public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
 
-    public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
-
-    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8080));
+    WireMockServer wireMockServer;
 
     @BeforeAll
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+	
+	final var serverPort = Integer.parseInt(serverURL.split(":")[2]);
 
-	WIREMOCK.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
+	wireMockServer = new WireMockServer(options().port(serverPort));
+
+	wireMockServer.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
 			.willReturn( //
 					aResponse() //
 							.withStatus(200) //
 							.withHeader("content-type", "text/json") //
+							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
 							.withBodyFile("get-health-200.json") //
 			));
 
-	WIREMOCK.start();
+	wireMockServer.start();
     }
 
     @AfterAll
     void afterAll() throws IOException {
-	WIREMOCK.stop();
+	wireMockServer.stop();
     }
 
     @Test

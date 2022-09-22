@@ -28,7 +28,7 @@ public class CheckServiceStatusTasklet implements Tasklet {
     CheckServiceStatusTasklet( //
 		    final ActuatorServiceClient convertImageServiceClient, //
 		    //
-		    @Value("${application.image-converter-service.url}") // 
+		    @Value("${application.image-converter-service.url}") //
 		    final String serverURL) {
 	super();
 	this.actuatorServiceClient = convertImageServiceClient;
@@ -42,7 +42,18 @@ public class CheckServiceStatusTasklet implements Tasklet {
 
 	LOGGER.info("Server status URL '{}'", fullServerURL);
 
-	final var jsonString = actuatorServiceClient.checkStatus();
+	final var response = actuatorServiceClient.checkStatus();
+
+	final var csrf = response.getHeaders().get("X-CSRF-TOKEN");
+
+	final var jobExecutionContext = chunkContext.getStepContext() //
+			.getStepExecution() //
+			.getJobExecution() //
+			.getExecutionContext();
+
+	jobExecutionContext.put("CSRF", csrf);
+
+	final var jsonString = response.getBody();
 
 	final var mapper = new ObjectMapper();
 	final var actualObj = mapper.readTree(jsonString);

@@ -48,11 +48,11 @@ spring:
         # EMBEDDED always
         # job.enabled: false
         
-    logging:
-      level:
-        root: DEBUG
-        org.imageconverter.util.http: DEBUG
-        org.springframework.batch: DEBUG
+#    logging:
+#      level:
+#        root: DEBUG
+#        org.imageconverter.util.http: DEBUG
+#        org.springframework.batch: DEBUG
 
 #============ Open Feigh ====================================================================================
 feign:

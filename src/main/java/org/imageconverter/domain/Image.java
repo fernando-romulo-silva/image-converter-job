@@ -9,8 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,9 +25,8 @@ public class Image {
     @Column(name = "IMG_NAME", nullable = false, unique = true)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "BPF_ID", nullable = false, updatable = false)
-    private BatchProcessingFile file;
+    @Column(name = "IMG_BATCH_FILE" )
+    private String file;
 
     @Column(name = "IMG_CREATED", nullable = false)
     private LocalDateTime created;
@@ -46,7 +43,7 @@ public class Image {
 		    final String name, // 
 		    //
 		    @NotNull(message = "The 'file' cannot be null")
-		    final BatchProcessingFile file) {
+		    final String file) {
 	super();
 	this.name = name;
 	this.file = file;
@@ -60,7 +57,7 @@ public class Image {
         return name;
     }
 
-    public BatchProcessingFile getFile() {
+    public String getFile() {
         return file;
     }
 

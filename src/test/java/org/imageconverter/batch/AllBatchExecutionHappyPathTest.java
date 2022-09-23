@@ -30,7 +30,7 @@ import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
-import org.imageconverter.domain.BatchProcessingFileRepository;
+import org.imageconverter.domain.ImageRepository;
 import org.imageconverter.util.DefaultStepListener;
 import org.imageconverter.util.http.ConvertImageServiceClient;
 import org.junit.jupiter.api.AfterAll;
@@ -61,7 +61,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 @DataJpaTest
-@EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
+@EnableJpaRepositories(basePackageClasses = ImageRepository.class)
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //
@@ -88,7 +88,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			ConvertionStepConfiguration.class, ConvertionItemWriter.class, ConversionItemProcessor.class, ConversionItemReader.class, //
 		} //
 )
-@ImportAutoConfiguration({ FeignAutoConfiguration.class})
+@ImportAutoConfiguration({ FeignAutoConfiguration.class })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)

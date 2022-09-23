@@ -22,7 +22,7 @@ import org.imageconverter.config.BatchConfiguration;
 import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignSecurityConfiguration;
-import org.imageconverter.domain.BatchProcessingFileRepository;
+import org.imageconverter.domain.ImageRepository;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -54,7 +54,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 
 @DataJpaTest
-@EnableJpaRepositories(basePackageClasses = BatchProcessingFileRepository.class)
+@EnableJpaRepositories(basePackageClasses = ImageRepository.class)
 @SpringBatchTest
 @ContextConfiguration( //
 		classes = { //

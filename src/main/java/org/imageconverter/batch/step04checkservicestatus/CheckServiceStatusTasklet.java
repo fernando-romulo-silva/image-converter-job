@@ -2,9 +2,9 @@ package org.imageconverter.batch.step04checkservicestatus;
 
 import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
 
+import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.util.http.ActuatorServiceClient;
 import org.slf4j.Logger;
@@ -56,12 +56,20 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	    csrf = StringUtils.EMPTY;
 	}
 	
+	final List<String> cookies;
+	if (Objects.nonNull(headers.get("Set-Cookie"))) {
+	    cookies = headers.get("Set-Cookie").isEmpty() ? List.of() : headers.get("Set-Cookie");	    
+	}else {
+	    cookies = List.of();
+	}	
+	
 	final var jobExecutionContext = chunkContext.getStepContext() //
 			.getStepExecution() //
 			.getJobExecution() //
 			.getExecutionContext();
 
 	jobExecutionContext.put("CSRF", csrf);
+	jobExecutionContext.put("COOKIES", cookies);
 
 	final var jsonString = response.getBody();
 

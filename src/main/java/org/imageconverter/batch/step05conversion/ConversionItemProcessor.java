@@ -1,8 +1,11 @@
 package org.imageconverter.batch.step05conversion;
 
+import static java.util.stream.Collectors.joining;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,7 +51,14 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
 	final var csr = Optional.ofNullable(jobExecutionContext.get("CSRF")).orElse(StringUtils.EMPTY);
 
-	final var headers = Map.<String, String>of("X-CSRF-TOKEN", (String) csr);
+	@SuppressWarnings("unchecked")
+	final var cookies = (List<String>) jobExecutionContext.get("COOKIES");
+
+//	headers.set("Cookie", cookies.stream().collect(joining(";")));
+	final var headers = Map.<String, String>of( //
+			"X-CSRF-TOKEN", (String) csr, //
+			"Cookie", cookies.stream().collect(joining(";"))
+	);
 
 	final var content = Base64.getDecoder().decode(item.getContent());
 

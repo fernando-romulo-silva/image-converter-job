@@ -3,7 +3,9 @@ package org.imageconverter.config.openfeign;
 import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
 
 import java.io.IOException;
+import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.infra.exception.BaseApplicationException;
 import org.imageconverter.infra.exception.ConversionAlreadyExistsException;
 import org.imageconverter.infra.exception.ConversionErrorException;
@@ -24,9 +26,15 @@ public abstract class AbstractOpenFeignConfiguration {
 
 	    String msg;
 	    try {
-		msg = new String(response.body().asInputStream().readAllBytes());
+		
+		if (Objects.nonNull(response.body())) {
+		    msg = new String(response.body().asInputStream().readAllBytes());
+		} else {
+		    msg = StringUtils.EMPTY;
+		}
+		
 	    } catch (IOException e) {
-		msg = "";
+		msg = StringUtils.EMPTY;
 	    }
 
 	    switch (response.status()) {
@@ -40,9 +48,9 @@ public abstract class AbstractOpenFeignConfiguration {
 		return new UnexpectedConversionException(msg);
 	    case 503:
 		return new ServerHealthDownException(serverURL + ACTUATOR_HEALTH_URL);
-		
+
 	    default:
-		return new BaseApplicationException("Generic error");
+		return new BaseApplicationException("Generic error: " + msg);
 	    }
 	};
     }

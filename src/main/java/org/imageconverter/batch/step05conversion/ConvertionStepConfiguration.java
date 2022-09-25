@@ -2,6 +2,8 @@ package org.imageconverter.batch.step05conversion;
 
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
 
+import java.net.SocketTimeoutException;
+
 import org.imageconverter.domain.Image;
 import org.imageconverter.util.DefaultStepListener;
 import org.springframework.batch.core.Step;
@@ -12,6 +14,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
@@ -32,7 +35,7 @@ public class ConvertionStepConfiguration {
 		    //
 		    @Value("${application.chunk-size}") //
 		    final Integer chunkSize, //
-		    final DefaultStepListener defaultStepListener,
+		    final DefaultStepListener defaultStepListener, //
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory //
@@ -45,6 +48,12 @@ public class ConvertionStepConfiguration {
 			.reader(conversionItemReader) //
 			.processor(conversionItemProcessor) //
 			.writer(convertionItemWriter) //
+			//
+			.faultTolerant() //
+			.retryLimit(3) //
+			//.retry(ConnectTimeoutException.class)
+			.retry(SocketTimeoutException.class) //
+			.retry(DeadlockLoserDataAccessException.class)
 			//
 			.build();
     }

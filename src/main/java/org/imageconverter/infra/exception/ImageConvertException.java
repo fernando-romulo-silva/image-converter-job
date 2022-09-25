@@ -1,4 +1,4 @@
-package org.imageconverter.infra;
+package org.imageconverter.infra.exception;
 
 public class ImageConvertException extends RuntimeException {
 

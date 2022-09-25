@@ -2,6 +2,10 @@ package org.imageconverter.batch.step04checkservicestatus;
 
 import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
 
+import java.util.Objects;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.util.http.ActuatorServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @StepScope
 public class CheckServiceStatusTasklet implements Tasklet {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckServiceStatusTasklet.class);
 
     private final ActuatorServiceClient actuatorServiceClient;
 
@@ -43,9 +47,15 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	LOGGER.info("Server status URL '{}'", fullServerURL);
 
 	final var response = actuatorServiceClient.checkStatus();
-
-	final var csrf = response.getHeaders().get("X-CSRF-TOKEN");
-
+	final var headers = response.getHeaders();
+	
+	final String csrf;
+	if (Objects.nonNull(headers.get("X-CSRF-TOKEN"))) {
+	    csrf = headers.get("X-CSRF-TOKEN").isEmpty() ? StringUtils.EMPTY : headers.get("X-CSRF-TOKEN").get(0);	    
+	}else {
+	    csrf = StringUtils.EMPTY;
+	}
+	
 	final var jobExecutionContext = chunkContext.getStepContext() //
 			.getStepExecution() //
 			.getJobExecution() //

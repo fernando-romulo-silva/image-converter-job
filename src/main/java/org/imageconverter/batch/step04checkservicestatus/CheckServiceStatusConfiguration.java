@@ -12,7 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class CheckServiceStatusConfiguration {
-    
+
     private final StepBuilderFactory stepBuilderFactory;
 
     CheckServiceStatusConfiguration(final StepBuilderFactory stepBuilderFactory) {
@@ -20,18 +20,17 @@ public class CheckServiceStatusConfiguration {
 	this.stepBuilderFactory = stepBuilderFactory;
     }
 
-    
     @Bean
-    Step checkServiceStatusStep( // 
-		    final Tasklet checkServiceStatusTasklet, // 
-		    final DefaultStepListener defaultStepListener, // 
+    Step checkServiceStatusStep( //
+		    final Tasklet checkServiceStatusTasklet, //
+		    final DefaultStepListener defaultStepListener, //
 		    final PlatformTransactionManager transactionManager) {
 
 	return this.stepBuilderFactory.get(CHECK_SERVICE_STATUS_STEP) //
 			.transactionManager(transactionManager) //
 			.listener(defaultStepListener) //
 			.tasklet(checkServiceStatusTasklet) //
-			.allowStartIfComplete(true)
+			.allowStartIfComplete(true) //
 			.build();
     }
 }

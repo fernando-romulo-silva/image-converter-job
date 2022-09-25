@@ -1,25 +1,39 @@
 package org.imageconverter.batch.step05conversion;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.domain.Image;
 import org.imageconverter.util.http.ConvertImageServiceClient;
-import org.imageconverter.util.http.ImageConverterRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @StepScope
 @Component
 public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
-    
+
     private static final String EXECUTION_TYPE = "BATCH";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConversionItemProcessor.class);
+
     private final ConvertImageServiceClient convertImageServiceClient;
+
+    @Value("#{stepExecution.jobExecution}")
+    private JobExecution jobExecution;
 
     ConversionItemProcessor(final ConvertImageServiceClient convertImageServiceClient) {
 	super();
@@ -28,15 +42,33 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
     public Image process(final Image item) throws Exception {
 
-	logger.info("Item {} is processing", item);
+	LOGGER.info("Item {} is processing", item.getName());
 
-	final var csr = "";
+	final var jobExecutionContext = jobExecution.getExecutionContext();
 
-	final var headers = Map.<String, Object>of("X-CSRF-TOKEN", csr);
-	
-	final var request = new ImageConverterRequest(item.getName(), null, EXECUTION_TYPE);
+	final var csr = Optional.ofNullable(jobExecutionContext.get("CSRF")).orElse(StringUtils.EMPTY);
 
-	convertImageServiceClient.convert(headers, request);
+	final var headers = Map.<String, String>of("X-CSRF-TOKEN", (String) csr);
+
+	final var content = Base64.getDecoder().decode(item.getContent());
+
+	final var cont = new ByteArrayInputStream(content);
+
+	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", MediaType.IMAGE_PNG_VALUE, true, item.getName());
+
+	try (cont; final var os = fileItem.getOutputStream()) {
+	    IOUtils.copy(cont, os);
+	} catch (final IOException ex) {
+	    throw new IllegalArgumentException("Invalid file: " + ex, ex);
+	}
+
+	final var multipartFile = new CommonsMultipartFile(fileItem);
+
+	final var result = convertImageServiceClient.convert(headers, multipartFile);
+
+	item.updateConvertion(result.text());
+
+	LOGGER.info("Item {} processed OK", item.getName());
 
 	return item;
     }

@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "IMAGE_BATCH")
@@ -20,16 +19,22 @@ public class Image {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "IMG_ID", nullable = false)
-    private String id;
+    private Long id;
 
     @Column(name = "IMG_NAME", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "IMG_BATCH_FILE" )
-    private String file;
+    @Column(name = "IMG_CONTENT")
+    private String content;
+    
+    @Column(name = "IMG_BATCH_FILE")
+    private String batchFile;
 
     @Column(name = "IMG_CREATED", nullable = false)
     private LocalDateTime created;
+    
+    @Column(name = "IMG_UPDATED", nullable = true)
+    private LocalDateTime updated;
 
     @Column(name = "IMG_CONVERSION")
     private String conversion;
@@ -42,14 +47,20 @@ public class Image {
 		    @NotEmpty(message = "The 'name' cannot be empty")//
 		    final String name, // 
 		    //
-		    @NotNull(message = "The 'file' cannot be null")
-		    final String file) {
+		    @NotEmpty(message = "The 'batchFile' cannot be empty")
+		    final String batchFile,
+		    //
+		    @NotEmpty(message = "The 'content' cannot be empty")
+		    final String content
+		    
+		    ) {
 	super();
 	this.name = name;
-	this.file = file;
+	this.batchFile = batchFile;
+	this.content = content;
     }
     
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -57,16 +68,25 @@ public class Image {
         return name;
     }
 
-    public String getFile() {
-        return file;
+    public String getBatchFile() {
+        return batchFile;
     }
 
     public LocalDateTime getCreated() {
         return created;
     }
+    
+    public String getContent() {
+	return content;
+    }
 
-    public String getConversion() {
-        return conversion;
+//    public String getConversion() {
+//        return conversion;
+//    }
+    
+    public void updateConvertion(final String text) {
+	conversion = text;
+	updated = LocalDateTime.now();
     }
 
     @Override

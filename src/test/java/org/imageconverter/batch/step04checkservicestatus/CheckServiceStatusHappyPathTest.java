@@ -89,6 +89,7 @@ public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
 							.withHeader("content-type", "text/json") //
 							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
 							.withBodyFile("get-health-200.json") //
+							.withChunkedDribbleDelay(5, 9000)
 			));
 
 	wireMockServer.start();

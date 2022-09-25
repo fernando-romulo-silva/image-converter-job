@@ -21,7 +21,7 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
     public static final String FLOW_STATUS_CONTINUE_SERIAL = "SERIAL";
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SplitFileStepExecutionDecider.class);
 
     private final Long splitFileSize;
 

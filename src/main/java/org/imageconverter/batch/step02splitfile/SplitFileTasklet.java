@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 public class SplitFileTasklet extends SystemCommandTasklet {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SplitFileTasklet.class);
 
     private final String fileName;
 

@@ -31,13 +31,11 @@ public class ConversionItemReader extends JpaPagingItemReader<Image> {
     private void config(final Integer paginationSize) {
 
 	final var sql = """ 
-			select *
-			  from IMAGE_BATCH
-			 where IMG_ID >= :limit		
+			select i.*
+			  from IMAGE_BATCH i
+			 where i.IMG_ID <= :limit		
 			""";
 	
-	 //"select * from IMAGE_BATCH where IMG_ID >= :limit";
-
 	final var queryProvider = new JpaNativeQueryProvider<Image>();
 	queryProvider.setSqlQuery(sql);
 	queryProvider.setEntityClass(Image.class);

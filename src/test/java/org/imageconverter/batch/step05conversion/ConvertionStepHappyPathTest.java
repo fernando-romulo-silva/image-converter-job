@@ -102,12 +102,12 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
 							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
 			));
 
-	WIREMOCK.start();
+//	WIREMOCK.start();
     }
 
     @AfterAll
     void afterAll() throws IOException {
-	WIREMOCK.stop();
+//	WIREMOCK.stop();
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.FileNotFoundException;
 
+import org.imageconverter.infra.exception.ImageConvertException;
 import org.slf4j.Logger;
 import org.springframework.batch.core.step.skip.SkipLimitExceededException;
 import org.springframework.batch.core.step.skip.SkipPolicy;

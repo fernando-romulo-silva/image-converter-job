@@ -15,19 +15,21 @@ public class LoadFileProcessor implements ItemProcessor<ImageFileLoad, Image> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemProcessor.class);
     
-    private final String fileName;
+    private final String batchFileName;
 
     LoadFileProcessor(@Value("#{jobParameters['fileName']}") final String fileName) {
-	this.fileName = fileName;
+	this.batchFileName = fileName;
     }
 
     @Override
     public Image process(final ImageFileLoad item) throws Exception {
 
-	LOGGER.info("");
+	LOGGER.info("ImageFileLoad id {}, fileName {} ", item.id(), item.fileName());
 	
-	final var image = new Image(item.fileName(), fileName);
+	final var image = new Image(item.fileName(), batchFileName, item.fileContent());
 
+	LOGGER.info("Batch file name id {}, created {} ", batchFileName, image.getCreated());
+	
 	return image;
     }
 }

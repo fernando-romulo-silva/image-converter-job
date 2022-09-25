@@ -18,8 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class LoadFilesStepSerialConfiguration {
 
-//    private static final Logger LOGGER = getLogger(LoadFilesStepSerialConfiguration.class);
-
     private final StepBuilderFactory stepBuilderFactory;
 
     LoadFilesStepSerialConfiguration(final StepBuilderFactory stepBuilderFactory) {

@@ -98,7 +98,7 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
 	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
 
 	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
-	assertThat(dbList).map(d -> d.getId()).containsAll(idImagesList);
+	assertThat(dbList).map(d -> Long.toString(d.getId())).containsAll(idImagesList);
 	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
     }
 }

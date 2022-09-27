@@ -54,20 +54,23 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	@SuppressWarnings("unchecked")
 	final var cookies = (List<String>) jobExecutionContext.get("COOKIES");
 
-//	headers.set("Cookie", cookies.stream().collect(joining(";")));
 	final var headers = Map.<String, String>of( //
-			"X-CSRF-TOKEN", (String) csr, //
+			"X-XSRF-TOKEN", (String) csr, //
 			"Cookie", cookies.stream().collect(joining(";"))
 	);
 
 	final var content = Base64.getDecoder().decode(item.getContent());
 
-	final var cont = new ByteArrayInputStream(content);
+	
 
 	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", MediaType.IMAGE_PNG_VALUE, true, item.getName());
 
-	try (cont; final var os = fileItem.getOutputStream()) {
+	try (//
+		final var cont = new ByteArrayInputStream(content);// 
+		final var os = fileItem.getOutputStream()) {
+	    
 	    IOUtils.copy(cont, os);
+	    
 	} catch (final IOException ex) {
 	    throw new IllegalArgumentException("Invalid file: " + ex, ex);
 	}

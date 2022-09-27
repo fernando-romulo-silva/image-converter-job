@@ -50,8 +50,8 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	final var headers = response.getHeaders();
 	
 	final String csrf;
-	if (Objects.nonNull(headers.get("X-CSRF-TOKEN"))) {
-	    csrf = headers.get("X-CSRF-TOKEN").isEmpty() ? StringUtils.EMPTY : headers.get("X-CSRF-TOKEN").get(0);	    
+	if (Objects.nonNull(headers.get("XSRF-TOKEN"))) {
+	    csrf = headers.get("XSRF-TOKEN").isEmpty() ? StringUtils.EMPTY : headers.get("XSRF-TOKEN").get(0);	    
 	}else {
 	    csrf = StringUtils.EMPTY;
 	}

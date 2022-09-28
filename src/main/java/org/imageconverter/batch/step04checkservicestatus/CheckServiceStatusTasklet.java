@@ -15,6 +15,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,22 +48,11 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	LOGGER.info("Server status URL '{}'", fullServerURL);
 
 	final var response = actuatorServiceClient.checkStatus();
-	final var headers = response.getHeaders();
-	
-	final String csrf;
-	if (Objects.nonNull(headers.get("XSRF-TOKEN"))) {
-	    csrf = headers.get("XSRF-TOKEN").isEmpty() ? StringUtils.EMPTY : headers.get("XSRF-TOKEN").get(0);	    
-	}else {
-	    csrf = StringUtils.EMPTY;
-	}
-	
-	final List<String> cookies;
-	if (Objects.nonNull(headers.get("Set-Cookie"))) {
-	    cookies = headers.get("Set-Cookie").isEmpty() ? List.of() : headers.get("Set-Cookie");	    
-	}else {
-	    cookies = List.of();
-	}	
-	
+
+	final var csrf = storeCsrf(response);
+
+	final var cookies = storeHeaders(response);
+
 	final var jobExecutionContext = chunkContext.getStepContext() //
 			.getStepExecution() //
 			.getJobExecution() //
@@ -79,5 +69,35 @@ public class CheckServiceStatusTasklet implements Tasklet {
 	LOGGER.info("Server status is '{}'", actualObj.get("status"));
 
 	return RepeatStatus.FINISHED;
+    }
+
+    private List<String> storeHeaders(final ResponseEntity<String> response) {
+	
+	final var headers = response.getHeaders();
+	
+	final List<String> cookies;
+	
+	if (Objects.nonNull(headers.get("Set-Cookie"))) {
+	    cookies = headers.get("Set-Cookie").isEmpty() ? List.of() : headers.get("Set-Cookie");
+	} else {
+	    cookies = List.of();
+	}
+	
+	return cookies;
+    }
+
+    private String storeCsrf(final ResponseEntity<String> response) {
+	
+	final var headers = response.getHeaders();
+	
+	final String csrf;
+	
+	if (Objects.nonNull(headers.get("XSRF-TOKEN"))) {
+	    csrf = headers.get("XSRF-TOKEN").isEmpty() ? StringUtils.EMPTY : headers.get("XSRF-TOKEN").get(0);
+	} else {
+	    csrf = StringUtils.EMPTY;
+	}
+	
+	return csrf;
     }
 }

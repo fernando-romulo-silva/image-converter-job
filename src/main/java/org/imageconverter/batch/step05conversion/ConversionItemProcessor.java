@@ -13,6 +13,7 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.imageconverter.domain.Image;
 import org.imageconverter.util.http.ConvertImageServiceClient;
 import org.slf4j.Logger;
@@ -36,16 +37,57 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
     private final ConvertImageServiceClient convertImageServiceClient;
 
     @Value("#{stepExecution.jobExecution}")
-    private JobExecution jobExecution;
+    private final JobExecution jobExecution;
 
-    ConversionItemProcessor(final ConvertImageServiceClient convertImageServiceClient) {
+    ConversionItemProcessor( //
+		    final ConvertImageServiceClient convertImageServiceClient, //
+		    //
+		    @Value("#{stepExecution.jobExecution}") final JobExecution jobExecution) {
 	super();
 	this.convertImageServiceClient = convertImageServiceClient;
+	this.jobExecution = jobExecution;
     }
 
     public Image process(final Image item) throws Exception {
 
 	LOGGER.info("Item {} is processing", item.getName());
+
+	final var headers = createHeader();
+
+	final var multipartFile = createMultipartFile(item);
+
+	final var result = convertImageServiceClient.convert(headers, multipartFile);
+
+	item.updateConvertion(result.text());
+
+	LOGGER.info("Item {} processed OK with text {}", item.getName(), result.text());
+
+	return item;
+    }
+
+    private CommonsMultipartFile createMultipartFile(final Image item) {
+
+	final var content = Base64.getDecoder() //
+			.decode(item.getContent());
+
+	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", MediaType.IMAGE_PNG_VALUE, true, item.getName());
+
+	try (//
+			final var cont = new ByteArrayInputStream(content); //
+			final var os = fileItem.getOutputStream()) {
+
+	    IOUtils.copy(cont, os);
+
+	} catch (final IOException ex) {
+
+	    throw new IllegalArgumentException("Invalid file: " + ExceptionUtils.getRootCauseMessage(ex), ExceptionUtils.getRootCause(ex));
+	}
+
+	final var multipartFile = new CommonsMultipartFile(fileItem);
+	return multipartFile;
+    }
+
+    private Map<String, String> createHeader() {
 
 	final var jobExecutionContext = jobExecution.getExecutionContext();
 
@@ -56,34 +98,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
 	final var headers = Map.<String, String>of( //
 			"X-XSRF-TOKEN", (String) csr, //
-			"Cookie", cookies.stream().collect(joining(";"))
-	);
-
-	final var content = Base64.getDecoder().decode(item.getContent());
-
-	
-
-	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", MediaType.IMAGE_PNG_VALUE, true, item.getName());
-
-	try (//
-		final var cont = new ByteArrayInputStream(content);// 
-		final var os = fileItem.getOutputStream()) {
-	    
-	    IOUtils.copy(cont, os);
-	    
-	} catch (final IOException ex) {
-	    throw new IllegalArgumentException("Invalid file: " + ex, ex);
-	}
-
-	final var multipartFile = new CommonsMultipartFile(fileItem);
-
-	final var result = convertImageServiceClient.convert(headers, multipartFile);
-
-	item.updateConvertion(result.text());
-
-	LOGGER.info("Item {} processed OK", item.getName());
-
-	return item;
+			"Cookie", cookies.stream().collect(joining(";")));
+	return headers;
     }
-
 }

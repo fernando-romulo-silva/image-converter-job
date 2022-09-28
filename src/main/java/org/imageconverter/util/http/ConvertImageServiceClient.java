@@ -9,10 +9,9 @@ import java.util.Map;
 import org.imageconverter.config.openfeign.OpenFeignSecurityConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-
-import feign.HeaderMap;
 
 @FeignClient(//
 		value = "converter", //
@@ -23,7 +22,7 @@ public interface ConvertImageServiceClient {
 
     @PostMapping(value = CONVERTION_URL, consumes = { MULTIPART_FORM_DATA_VALUE }, produces = APPLICATION_JSON_VALUE)
     ImageConverterPostResponse convert( //
-		    @HeaderMap //
+		    @RequestHeader //
 		    final Map<String, String> headers, //
 		    //
 		    @RequestPart(name = "file", required = true) //

@@ -28,6 +28,7 @@ public class ConvertionItemWriter implements ItemWriter<Image> {
 
 	LOGGER.info("Save '{}' images", list.size());
 
+	// we don't use service here because the spring batch control the transaction
 	imageRepository.saveAll(list);
     }
 }

@@ -75,7 +75,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestInstance(Lifecycle.PER_CLASS)
 public class CheckServiceStatusHappyPathTest extends AbstractDataBatchTest {
 
-    WireMockServer wireMockServer;
+    private WireMockServer wireMockServer;
 
     @BeforeAll
     void beforeAll() throws IOException {

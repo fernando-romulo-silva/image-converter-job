@@ -1,7 +1,14 @@
 package org.imageconverter.batch.step05conversion;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.absent;
+import static com.github.tomakehurst.wiremock.client.WireMock.binaryEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.nio.charset.Charset.forName;
+import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
@@ -46,6 +53,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = ImageRepository.class)
@@ -53,8 +61,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, 
-			// 
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class,
+			//
 			// Other class
 			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
@@ -78,40 +86,47 @@ public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
-    public static final WireMockServer WIREMOCK = new WireMockServer(options().port(8989));
+    public final WireMockServer wireMockServer = new WireMockServer(options().port(8989));
 
     // #header /rest/images/conversion/1
     @BeforeAll
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-	
+
 	createBatchDb();
 
 	// MultipartFile[field="file", filename=01_best.png, contentType=image/png, size=835]
 	
-//	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
-//			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
-//			.withHeader("Content-Type", containing("multipart/form-data;")) //
-//			.withHeader("Content-Length", containing("123674")) //
-//			.withMultipartRequestBody(aMultipart().withName("file").withBody(binaryEqualTo("ABCD".getBytes())))
-//			.willReturn( //
-//					aResponse() //
-//							.withStatus(200) //
-//							.withHeader("content-type", "text/xml") //
-//							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
-//							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
-//			))
-//	;
-//	
-//	WIREMOCK.stubFor(null)
+	// http://127.0.0.1:8080/rest/images/conversion
 
-//	WIREMOCK.start();
+	for (final var image : images) {
+
+	    wireMockServer.stubFor( //
+			    WireMock.post(urlEqualTo("/rest/images/convertion")) //
+					    .withHeader("X-CSRF-TOKEN", absent()) //
+					    .withHeader("Content-Type", containing("multipart/form-data;")) //
+					    .withHeader("Content-Length", containing(Long.toString(image.contentLength()))) //
+					    .withMultipartRequestBody( //
+							    aMultipart() //
+							        .withName("file") //
+							        .withBody(binaryEqualTo(readFileToByteArray(image.getFile())))) //
+					    .willReturn( //
+							    aResponse() //
+								.withStatus(200) //
+								.withHeader("Content-Type", "application/json") //
+								.withBody("{ \"text\": \"best\" }") //
+					    ) //
+	    );
+
+	}
+
+	wireMockServer.start();
     }
-    
+
     @AfterAll
     void afterAll() throws IOException {
-//	WIREMOCK.stop();
+	wireMockServer.stop();
     }
 
     @Test
@@ -130,5 +145,4 @@ public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
     }
-
 }

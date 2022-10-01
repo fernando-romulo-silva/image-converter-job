@@ -2,21 +2,18 @@ package org.imageconverter.batch;
 
 import static java.io.File.separator;
 import static java.math.RoundingMode.UP;
-import static java.util.AbstractMap.SimpleEntry;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map.Entry;
-
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -26,7 +23,6 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
@@ -43,13 +39,6 @@ public abstract class AbstractBatchTest {
     @Autowired
     protected JobRepository jobRepository;
 
-    @Qualifier("batchDataSource")
-    @Autowired
-    protected DataSource batchDataSource;
-
-    @Autowired
-    protected EntityManager entityManager;
-
     @Value("${application.batch-folders.input-files}")
     protected Resource inputFolder;
 
@@ -64,19 +53,19 @@ public abstract class AbstractBatchTest {
 
     @Value("classpath:images/*.png")
     protected Resource[] images;
-    
+
     @Value("${application.split-file-size}")
-    protected Long splitFileSize;    
-    
-    @Value("${application.image-converter-service.url}") 
+    protected Long splitFileSize;
+
+    @Value("${application.image-converter-service.url}")
     protected String serverURL;
-    
+
     protected String fileName = "2022-04-24_10-29_DBRGA.txt";
     
     protected List<Entry<String, String>> createBatchFile() throws IOException {
-	
+
 	var i = 1L;
-	
+
 	final var result = new ArrayList<Entry<String, String>>();
 
 	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
@@ -97,20 +86,20 @@ public abstract class AbstractBatchTest {
 
 		writer.write(line);
 		writer.newLine();
-		
+
 		result.add(new SimpleEntry<>(String.valueOf(imageFileId), imageFileName));
 
 		i++;
 	    }
 	}
-	
+
 	return result;
     }
-    
+
     protected List<Entry<String, String>> createSpliptedBatchFile() throws IOException {
-	
+
 	final var result = new ArrayList<Entry<String, String>>();
-	
+
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
 
 	final var baseName = FilenameUtils.getBaseName(fileName);
@@ -126,9 +115,9 @@ public abstract class AbstractBatchTest {
 	final var imagesListsGroups = Lists.partition(imagesList, splitFileSize.intValue());
 	var filePos = 0;
 	var i = 1L;
-	
+
 	for (final var imagesLists : imagesListsGroups) {
-	   
+
 	    final var fileName = processingAbsolutePath + separator + expectedFilesNames.get(filePos);
 
 	    try (final var writer = new BufferedWriter(new FileWriter(fileName, false))) {
@@ -149,14 +138,14 @@ public abstract class AbstractBatchTest {
 		    writer.newLine();
 
 		    i++;
-		    
+
 		    result.add(new SimpleEntry<>(String.valueOf(imageFileId), imageFileName));
 		}
 	    }
-	    
+
 	    filePos++;
 	}
-	
+
 	return result;
     }
 

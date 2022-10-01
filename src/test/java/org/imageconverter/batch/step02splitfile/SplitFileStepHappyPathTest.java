@@ -51,7 +51,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			//
+			// Other class
+			SplitFileStepExecutionDecider.class, DefaultStepListener.class, //			
 			//
 			// Second Step: SplitFileStep
 			SplitFileTasklet.class, SplitFileStepConfiguration.class //
@@ -114,6 +117,7 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 
 	final var resultedFilesNames = new ArrayList<String>();
 	final var filter = (Filter<Path>) p -> contains(p.getFileName().toString(), baseName) && !Objects.equals(p.getFileName().toString(), fileName);
+	
 	try (final var stream = Files.newDirectoryStream(processingAbsolutePath, filter)) {
 	    for (final var p : stream) {
 		resultedFilesNames.add(p.getFileName().toString());

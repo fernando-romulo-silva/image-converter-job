@@ -12,7 +12,7 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.imageconverter.batch.AbstractBatchTest;
+import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
@@ -20,6 +20,7 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
+import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,7 +54,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			//
+			// Other class
+			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// Special Configs
 			OpenFeignConfiguration.class,
@@ -69,7 +73,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class CheckServiceStatusHappyPathTest extends AbstractBatchTest {
+public class CheckServiceStatusHappyPathTest extends AbstractDataBatchTest {
 
     WireMockServer wireMockServer;
 

@@ -31,6 +31,7 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
+import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.imageconverter.util.http.ConvertImageServiceClient;
 import org.junit.jupiter.api.AfterAll;
@@ -66,7 +67,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, DefaultStepListener.class, ConvertImageServiceClient.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, ConvertImageServiceClient.class, //
+			// 
+			// Other class
+			ImageService.class, DefaultStepListener.class, //			
 			//
 			// Special Configs
 			OpenFeignConfiguration.class, BatchConfiguration.class, //
@@ -97,7 +101,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestPropertySource(properties = "application.split-file-size=0")
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
-class AllBatchExecutionHappyPathTest extends AbstractBatchTest {
+class AllBatchExecutionHappyPathTest extends AbstractDataBatchTest {
 
     @BeforeAll
     void beforeAll() throws IOException {

@@ -1,18 +1,19 @@
 package org.imageconverter.batch.step05conversion;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.imageconverter.domain.Image;
 import org.imageconverter.util.http.ConvertImageServiceClient;
@@ -22,7 +23,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -70,7 +70,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	final var content = Base64.getDecoder() //
 			.decode(item.getContent());
 
-	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", MediaType.IMAGE_PNG_VALUE, true, item.getName());
+	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", IMAGE_PNG_VALUE, true, item.getName());
 
 	try (//
 			final var cont = new ByteArrayInputStream(content); //
@@ -91,10 +91,10 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
 	final var jobExecutionContext = jobExecution.getExecutionContext();
 
-	final var csr = Optional.ofNullable(jobExecutionContext.get("CSRF")).orElse(StringUtils.EMPTY);
+	final var csr = ofNullable(jobExecutionContext.get("CSRF")).orElse(EMPTY);
 
 	@SuppressWarnings("unchecked")
-	final var cookies = (List<String>) jobExecutionContext.get("COOKIES");
+	final var cookies = ofNullable((List<String>) jobExecutionContext.get("COOKIES")).orElse(List.<String>of());
 
 	final var headers = Map.<String, String>of( //
 			"X-XSRF-TOKEN", (String) csr, //

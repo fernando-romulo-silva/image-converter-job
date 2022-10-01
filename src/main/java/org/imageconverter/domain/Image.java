@@ -58,6 +58,7 @@ public class Image {
 	this.name = name;
 	this.batchFile = batchFile;
 	this.content = content;
+	this.created = LocalDateTime.now();
     }
     
     public Long getId() {

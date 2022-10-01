@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import org.imageconverter.batch.AbstractBatchTest;
+import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step03loadfile.parallel.LoadFilesStepParallelConfiguration;
 import org.imageconverter.batch.step03loadfile.parallel.ParalellItemReader;
@@ -20,6 +20,7 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.Image;
 import org.imageconverter.domain.ImageRepository;
+import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -49,11 +50,15 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			//
+			// Other class
+			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// Fourth Step 3.2: LoadFileParallel
 			LoadFileProcessor.class, LoadFileSetMapper.class, LoadFileWriter.class, //
-			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, ParalellItemReader.class, } //
+			LoadFilesStepConfiguration.class, LoadFilesStepParallelConfiguration.class, ParalellItemReader.class, //
+		} //
 )
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @TestExecutionListeners({ StepScopeTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
@@ -61,8 +66,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
-    
+class LoadFileParalellStepHappyPathTest extends AbstractDataBatchTest {
+
     private List<Map.Entry<String, String>> imagesDTO;
 
     @BeforeAll
@@ -82,18 +87,18 @@ class LoadFileParalellStepHappyPathTest extends AbstractBatchTest {
 
 	// given
 	final var qtyFiles = new BigDecimal(images.length).divide(new BigDecimal(splitFileSize), UP).intValue();
-	final var idImagesList = imagesDTO.stream().map( i -> i.getKey()).toList();
-	final var nameImagesList = imagesDTO.stream().map( i -> i.getValue()).toList();
-	
+	final var idImagesList = imagesDTO.stream().map(i -> i.getKey()).toList();
+	final var nameImagesList = imagesDTO.stream().map(i -> i.getValue()).toList();
+
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_PARALELL, defaultJobParameters());
 	final var actualStepExecutions = jobExecution.getStepExecutions();
 	final var actualJobExitStatus = jobExecution.getExitStatus();
-	
+
 	// then
 	assertThat(actualStepExecutions.size()).isEqualTo(qtyFiles + 1); // qtdy file == number of executions + Main Thread
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
-	
+
 	@SuppressWarnings("unchecked")
 	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
 

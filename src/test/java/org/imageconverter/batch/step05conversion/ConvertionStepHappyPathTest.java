@@ -1,9 +1,5 @@
 package org.imageconverter.batch.step05conversion;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.nio.charset.Charset.forName;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
@@ -13,9 +9,8 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
-import java.util.UUID;
 
-import org.imageconverter.batch.AbstractBatchTest;
+import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
@@ -23,6 +18,7 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignSecurityConfiguration;
 import org.imageconverter.domain.ImageRepository;
+import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,8 +46,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = ImageRepository.class)
@@ -59,7 +53,10 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, 
+			// 
+			// Other class
+			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// Special Configs
 			OpenFeignSecurityConfiguration.class,
@@ -77,7 +74,7 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 @TestPropertySource(properties = "application.split-file-size=4")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class ConvertionStepHappyPathTest extends AbstractBatchTest {
+public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
 
@@ -88,23 +85,30 @@ public class ConvertionStepHappyPathTest extends AbstractBatchTest {
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+	
+	createBatchDb();
 
-	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
-			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
-			.withHeader("Content-Type", containing("multipart/form-data;")) //
-			.withHeader("Content-Length", containing("123674")) //
-			.withMultipartRequestBody(aMultipart().withBody(null))
-			.willReturn( //
-					aResponse() //
-							.withStatus(200) //
-							.withHeader("content-type", "text/xml") //
-							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
-							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
-			));
+	// MultipartFile[field="file", filename=01_best.png, contentType=image/png, size=835]
+	
+//	WIREMOCK.stubFor(WireMock.post(urlEqualTo("/rest/images/convertion")) //
+//			.withHeader("X-CSRF-TOKEN", new ContainsPattern("")) //
+//			.withHeader("Content-Type", containing("multipart/form-data;")) //
+//			.withHeader("Content-Length", containing("123674")) //
+//			.withMultipartRequestBody(aMultipart().withName("file").withBody(binaryEqualTo("ABCD".getBytes())))
+//			.willReturn( //
+//					aResponse() //
+//							.withStatus(200) //
+//							.withHeader("content-type", "text/xml") //
+//							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
+//							.withBodyFile("cpf" + "/consultaSaldoFuturoResponse.xml") //
+//			))
+//	;
+//	
+//	WIREMOCK.stubFor(null)
 
 //	WIREMOCK.start();
     }
-
+    
     @AfterAll
     void afterAll() throws IOException {
 //	WIREMOCK.stop();

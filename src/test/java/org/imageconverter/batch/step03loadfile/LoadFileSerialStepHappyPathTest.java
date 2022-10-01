@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import org.imageconverter.batch.AbstractBatchTest;
+import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.batch.step03loadfile.serial.LoadFilesStepSerialConfiguration;
 import org.imageconverter.batch.step03loadfile.serial.SerialItemReader;
@@ -23,6 +23,7 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.domain.Image;
 import org.imageconverter.domain.ImageRepository;
+import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,11 +53,14 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class,//
+			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			//
+			// Other class
+			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //			
 			//
 			// Fourth Step 3.1: LoadFileSerial
 			LoadFileProcessor.class, LoadFileSetMapper.class, LoadFileWriter.class, //
-			LoadFilesStepConfiguration.class, LoadFilesStepSerialConfiguration.class, SerialItemReader.class
+			LoadFilesStepConfiguration.class, LoadFilesStepSerialConfiguration.class, SerialItemReader.class //
 
 		} //
 )
@@ -66,7 +70,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-class LoadFileSerialStepHappyPathTest extends AbstractBatchTest {
+class LoadFileSerialStepHappyPathTest extends AbstractDataBatchTest {
     
     private List<Map.Entry<String, String>> imagesDTO;
 

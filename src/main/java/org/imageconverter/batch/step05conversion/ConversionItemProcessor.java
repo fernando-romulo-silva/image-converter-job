@@ -97,6 +97,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	final var cookies = ofNullable((List<String>) jobExecutionContext.get("COOKIES")).orElse(List.<String>of());
 
 	final var headers = Map.<String, String>of( //
+			"Execution-Type", EXECUTION_TYPE, //
 			"X-XSRF-TOKEN", (String) csr, //
 			"Cookie", cookies.stream().collect(joining(";")));
 	return headers;

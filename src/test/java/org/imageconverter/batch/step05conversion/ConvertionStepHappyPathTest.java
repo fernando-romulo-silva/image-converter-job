@@ -2,21 +2,24 @@ package org.imageconverter.batch.step05conversion;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.absent;
 import static com.github.tomakehurst.wiremock.client.WireMock.binaryEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static java.nio.charset.Charset.forName;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.lang3.StringUtils.splitByCharacterTypeCamelCase;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CONVERTION_STEP;
+import static org.imageconverter.config.ImageConverterServiceConst.CONVERTION_URL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
@@ -42,7 +45,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -84,9 +86,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestInstance(Lifecycle.PER_CLASS)
 public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 
-    public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), forName("utf8"));
-
-    public final WireMockServer wireMockServer = new WireMockServer(options().port(8989));
+    private WireMockServer wireMockServer;
 
     // #header /rest/images/conversion/1
     @BeforeAll
@@ -95,18 +95,30 @@ public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
 
 	createBatchDb();
-
-	// MultipartFile[field="file", filename=01_best.png, contentType=image/png, size=835]
 	
-	// http://127.0.0.1:8080/rest/images/conversion
+	final var serverPort = Integer.parseInt(serverURL.split(":")[2]);
 
+	wireMockServer = new WireMockServer(options().port(serverPort));
+
+	final var notPermitedWords = List.of(".", "_", "png");
+	
 	for (final var image : images) {
-
+	    
+	   final var fileSplit1 = StringUtils.split(image.getFilename(), "_");
+	   
+	   final var fileId = fileSplit1[0];
+	    
+	   final var resultTextArray = splitByCharacterTypeCamelCase(fileSplit1[1]);
+	   
+	   final var resultText = Stream.of(resultTextArray)
+			   .filter(s -> !notPermitedWords.contains(s))
+			   .collect(Collectors.joining(" "));
+	   
 	    wireMockServer.stubFor( //
-			    WireMock.post(urlEqualTo("/rest/images/convertion")) //
-					    .withHeader("X-CSRF-TOKEN", absent()) //
-					    .withHeader("Content-Type", containing("multipart/form-data;")) //
-					    .withHeader("Content-Length", containing(Long.toString(image.contentLength()))) //
+			    WireMock.post(urlEqualTo(CONVERTION_URL)) //
+//					    .withHeader("X-CSRF-TOKEN", absent()) //
+					    .withHeader("Content-Type", containing("multipart/form-data; charset=UTF-8;")) //
+//					    .withHeader("Content-Length", containing(Long.toString(image.contentLength()))) //
 					    .withMultipartRequestBody( //
 							    aMultipart() //
 							        .withName("file") //
@@ -114,8 +126,9 @@ public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 					    .willReturn( //
 							    aResponse() //
 								.withStatus(200) //
+								.withHeader("Location", CONVERTION_URL + "/" + Integer.parseInt(fileId)) //
 								.withHeader("Content-Type", "application/json") //
-								.withBody("{ \"text\": \"best\" }") //
+								.withBody("{ \"text\": \""+ resultText +"\" }") //
 					    ) //
 	    );
 

@@ -37,6 +37,7 @@ public class OpenFeignSecurityConfiguration extends AbstractOpenFeignConfigurati
 		    //
 		    @Value("${application.image-converter-service.password}") //
 		    final String password) {
+	
 	return new BasicAuthRequestInterceptor(user, password);
     }
 }

@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.binaryEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.util.stream.Collectors.joining;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.lang3.StringUtils.splitByCharacterTypeCamelCase;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
@@ -16,7 +17,6 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -112,7 +112,7 @@ public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 	   
 	   final var resultText = Stream.of(resultTextArray)
 			   .filter(s -> !notPermitedWords.contains(s))
-			   .collect(Collectors.joining(" "));
+			   .collect(joining(" "));
 	   
 	    wireMockServer.stubFor( //
 			    WireMock.post(urlEqualTo(CONVERTION_URL)) //

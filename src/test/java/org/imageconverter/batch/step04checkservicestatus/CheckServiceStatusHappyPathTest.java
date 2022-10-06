@@ -12,6 +12,7 @@ import static org.springframework.batch.core.ExitStatus.COMPLETED;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.imageconverter.application.ImageService;
 import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
@@ -20,7 +21,6 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
-import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -89,11 +89,11 @@ public class CheckServiceStatusHappyPathTest extends AbstractDataBatchTest {
 	wireMockServer.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
 			.willReturn( //
 					aResponse() //
-							.withStatus(200) //
-							.withHeader("content-type", "text/json") //
-							.withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
-							.withBodyFile("get-health-200.json") //
-							.withChunkedDribbleDelay(5, 9000)
+					    .withStatus(200) //
+					    .withHeader("content-type", "text/json") //
+					    .withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
+					    .withBodyFile("get-health-200.json") //
+					    .withChunkedDribbleDelay(5, 9000)
 			));
 
 	wireMockServer.start();

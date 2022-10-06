@@ -16,17 +16,17 @@ public class DefaultStepListener {
     @BeforeStep
     public void beforeStep(final StepExecution stepExecution) {
 	LOGGER.info("=====================================================================================");
-	LOGGER.info("Step {} started!", stepExecution.getStepName());
-	LOGGER.info("Step {} start time {}", stepExecution.getStepName(), stepExecution.getStartTime());
+	LOGGER.info("Step '{}' started!", stepExecution.getStepName());
+	LOGGER.info("Step '{}' start time '{}'", stepExecution.getStepName(), stepExecution.getStartTime());
     }
 
     @AfterStep
     public ExitStatus afterStep(final StepExecution stepExecution) {
-        LOGGER.info("Read count, {}", stepExecution.getReadCount());
-        LOGGER.info("Skip count, {}", stepExecution.getSkipCount());
-        LOGGER.info("Commit count, {}", stepExecution.getCommitCount());
-        LOGGER.info("Step {} finished!", stepExecution.getStepName());
-        LOGGER.info("Step {} end time {}", stepExecution.getStepName(), stepExecution.getEndTime());
+        LOGGER.info("Read count '{}'", stepExecution.getReadCount());
+        LOGGER.info("Skip count '{}'", stepExecution.getSkipCount());
+        LOGGER.info("Commit count '{}'", stepExecution.getCommitCount());
+        LOGGER.info("Step '{}' finished!", stepExecution.getStepName());
+        LOGGER.info("Step '{}' end time '{}'", stepExecution.getStepName(), stepExecution.getEndTime());
 //        LOGGER.info("=====================================================================================");
         return stepExecution.getExitStatus();
     }

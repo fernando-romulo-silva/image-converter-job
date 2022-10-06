@@ -50,7 +50,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
     public Image process(final Image item) throws Exception {
 
-	LOGGER.info("Item {} is processing", item.getName());
+	LOGGER.info("Item '{}' is processing", item.getName());
 
 	final var headers = createHeader();
 
@@ -60,7 +60,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
 	item.updateConvertion(result.text());
 
-	LOGGER.info("Item {} processed OK with text {}", item.getName(), result.text());
+	LOGGER.info("Item '{}' processed OK with text '{}'", item.getName(), result.text());
 
 	return item;
     }

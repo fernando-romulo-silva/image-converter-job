@@ -1,4 +1,4 @@
-package org.imageconverter.service;
+package org.imageconverter.application;
 
 import org.imageconverter.domain.Image;
 import org.imageconverter.domain.ImageRepository;

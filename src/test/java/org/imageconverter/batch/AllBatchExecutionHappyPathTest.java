@@ -1,11 +1,27 @@
 package org.imageconverter.batch;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.binaryEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.lang3.StringUtils.splitByCharacterTypeCamelCase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.imageconverter.config.BatchConfiguration.CONVERT_IMAGE_JOB;
+import static org.imageconverter.config.ImageConverterServiceConst.ACTUATOR_HEALTH_URL;
+import static org.imageconverter.config.ImageConverterServiceConst.CONVERTION_URL;
 import static org.springframework.batch.core.ExitStatus.COMPLETED;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.imageconverter.application.ImageService;
 import org.imageconverter.batch.step01movefile.MoveFileStepConfiguration;
 import org.imageconverter.batch.step01movefile.MoveFileTasklet;
 import org.imageconverter.batch.step02splitfile.SplitFileStepConfiguration;
@@ -31,7 +47,6 @@ import org.imageconverter.config.DataSourceConfig;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
-import org.imageconverter.service.ImageService;
 import org.imageconverter.util.DefaultStepListener;
 import org.imageconverter.util.http.ConvertImageServiceClient;
 import org.junit.jupiter.api.AfterAll;
@@ -60,6 +75,9 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 @DataJpaTest
 @EnableJpaRepositories(basePackageClasses = ImageRepository.class)
@@ -102,17 +120,69 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(Lifecycle.PER_CLASS)
 class AllBatchExecutionHappyPathTest extends AbstractDataBatchTest {
+    
+    private WireMockServer wireMockServer;
 
     @BeforeAll
     void beforeAll() throws IOException {
 
 	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
+	
+	final var serverPort = Integer.parseInt(serverURL.split(":")[2]);
 
+	wireMockServer = new WireMockServer(options().port(serverPort));
+
+	wireMockServer.stubFor(WireMock.get(urlEqualTo(ACTUATOR_HEALTH_URL)) //
+			.willReturn( //
+					aResponse() //
+					    .withStatus(200) //
+					    .withHeader("content-type", "text/json") //
+					    .withHeader("X-CSRF-TOKEN", UUID.randomUUID().toString())
+					    .withBodyFile("get-health-200.json") //
+			));
+	
+	final var notPermitedWords = List.of(".", "_", "png");
+	
+	for (final var image : images) {
+	    
+	   final var fileSplit1 = StringUtils.split(image.getFilename(), "_");
+	   
+	   final var fileId = fileSplit1[0];
+	    
+	   final var resultTextArray = splitByCharacterTypeCamelCase(fileSplit1[1]);
+	   
+	   final var resultText = Stream.of(resultTextArray)
+			   .filter(s -> !notPermitedWords.contains(s))
+			   .collect(joining(" "));
+	   
+	    wireMockServer.stubFor( //
+			    WireMock.post(urlEqualTo(CONVERTION_URL)) //
+//					    .withHeader("X-CSRF-TOKEN", absent()) //
+					    .withHeader("Content-Type", containing("multipart/form-data; charset=UTF-8;")) //
+//					    .withHeader("Content-Length", containing(Long.toString(image.contentLength()))) //
+					    .withMultipartRequestBody( //
+							    aMultipart() //
+							        .withName("file") //
+							        .withBody(binaryEqualTo(readFileToByteArray(image.getFile())))) //
+					    .willReturn( //
+							    aResponse() //
+								.withStatus(200) //
+								.withHeader("Location", CONVERTION_URL + "/" + Integer.parseInt(fileId)) //
+								.withHeader("Content-Type", "application/json") //
+								.withBody("{ \"text\": \""+ resultText +"\" }") //
+					    ) //
+	    );
+
+	}
+
+	wireMockServer.start();
+	
 	createBatchFile();
     }
 
     @AfterAll
     void afterAll() throws IOException {
+	wireMockServer.stop();
 	cleanFolders();
     }
 

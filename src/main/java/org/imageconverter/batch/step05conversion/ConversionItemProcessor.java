@@ -36,13 +36,13 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 
     private final ConvertImageServiceClient convertImageServiceClient;
 
-    @Value("#{stepExecution.jobExecution}")
     private final JobExecution jobExecution;
 
     ConversionItemProcessor( //
 		    final ConvertImageServiceClient convertImageServiceClient, //
 		    //
-		    @Value("#{stepExecution.jobExecution}") final JobExecution jobExecution) {
+		    @Value("#{stepExecution.jobExecution}") // 
+		    final JobExecution jobExecution) {
 	super();
 	this.convertImageServiceClient = convertImageServiceClient;
 	this.jobExecution = jobExecution;

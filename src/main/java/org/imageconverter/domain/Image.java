@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "IMAGE_BATCH")
@@ -26,57 +27,63 @@ public class Image {
 
     @Column(name = "IMG_CONTENT")
     private String content;
-    
+
     @Column(name = "IMG_BATCH_FILE")
     private String batchFile;
 
     @Column(name = "IMG_CREATED", nullable = false)
     private LocalDateTime created;
-    
+
     @Column(name = "IMG_UPDATED", nullable = true)
     private LocalDateTime updated;
 
     @Column(name = "IMG_CONVERSION")
     private String conversion;
-    
+
+    @Column(name = "IMG_JOB")
+    private Long jobId;
+
     Image() {
 	super();
     }
 
     public Image( //
-		    @NotEmpty(message = "The 'name' cannot be empty")//
-		    final String name, // 
+		    @NotEmpty(message = "The 'name' cannot be empty") //
+		    final String name, //
 		    //
-		    @NotEmpty(message = "The 'batchFile' cannot be empty")
-		    final String batchFile,
+		    @NotEmpty(message = "The 'batchFile' cannot be empty") //
+		    final String batchFile, //
 		    //
-		    @NotEmpty(message = "The 'content' cannot be empty")
-		    final String content
-		    
-		    ) {
+		    @NotEmpty(message = "The 'content' cannot be empty") //
+		    final String content, //
+		    //
+		    @NotNull(message = "The 'jobId' cannot be null") //
+		    final Long jobId
+    ) {
 	super();
 	this.name = name;
 	this.batchFile = batchFile;
 	this.content = content;
+	this.jobId = jobId;
 	this.created = LocalDateTime.now();
     }
-    
+
     public Long getId() {
-        return id;
+	return id;
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public String getBatchFile() {
-        return batchFile;
+	return batchFile;
     }
 
     public LocalDateTime getCreated() {
-        return created;
+	return created;
     }
-    
+
     public String getContent() {
 	return content;
     }
@@ -84,7 +91,7 @@ public class Image {
 //    public String getConversion() {
 //        return conversion;
 //    }
-    
+
     public void updateConvertion(final String text) {
 	conversion = text;
 	updated = LocalDateTime.now();

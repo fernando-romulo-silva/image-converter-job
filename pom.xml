@@ -275,7 +275,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration combine.self="override"/>
+				<configuration combine.self="override" />
 			</plugin>
 
 			<plugin>
@@ -320,7 +320,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<configuration combine.self="override"/>
+				<configuration>
+					<outputName>${outputName}</outputName>
+					<showSuccess>true</showSuccess>
+				</configuration>
 			</plugin>
 
 			<plugin>

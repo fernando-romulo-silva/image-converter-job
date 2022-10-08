@@ -39,12 +39,12 @@ public class SplitFileStepExecutionDecider implements JobExecutionDecider {
 
 	if (Objects.nonNull(splitFileSize) && NumberUtils.compare(splitFileSize, LONG_ZERO) > 0) {
 
-	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is DISABLED. Continuing with the next Step.");
+	    LOGGER.info("The Step 'SplitFile' execution is DISABLED. Continuing with the next Step");
 
 	    status = FLOW_STATUS_CONTINUE_PARALELL;
 	} else {
 	    
-	    LOGGER.warn(jobExecution.getJobInstance().getJobName(), " -> The Step 'SplitFile' execution is ENABLED. Continuing with the this Step.");
+	    LOGGER.info("The Step 'SplitFile' execution is ENABLED. Continuing with the this Step");
 	    
 	    status = FLOW_STATUS_CONTINUE_SERIAL;
 	}

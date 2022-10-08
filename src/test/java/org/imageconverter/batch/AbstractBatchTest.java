@@ -61,7 +61,7 @@ public abstract class AbstractBatchTest {
     protected String serverURL;
 
     protected String fileName = "2022-04-24_10-29_DBRGA.txt";
-    
+
     protected List<Entry<String, String>> createBatchFile() throws IOException {
 
 	var i = 1L;
@@ -70,7 +70,9 @@ public abstract class AbstractBatchTest {
 
 	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
 
-	try (final var writer = new BufferedWriter(new FileWriter(filePath, false))) {
+	try (//
+		final var fileWriter = new FileWriter(filePath, false);
+		final var bufferWriter = new BufferedWriter(fileWriter)) {
 
 	    for (final var resource : images) {
 
@@ -84,8 +86,8 @@ public abstract class AbstractBatchTest {
 
 		final var line = imageFileId + ";" + imageFileName + ";" + imageEncodedString;
 
-		writer.write(line);
-		writer.newLine();
+		bufferWriter.write(line);
+		bufferWriter.newLine();
 
 		result.add(new SimpleEntry<>(String.valueOf(imageFileId), imageFileName));
 
@@ -120,7 +122,10 @@ public abstract class AbstractBatchTest {
 
 	    final var fileName = processingAbsolutePath + separator + expectedFilesNames.get(filePos);
 
-	    try (final var writer = new BufferedWriter(new FileWriter(fileName, false))) {
+	    
+	    try (//
+		    final var fileWriter = new FileWriter(fileName, false);
+		    final var bufferWriter = new BufferedWriter(fileWriter)) {
 
 		for (final var resource : imagesLists) {
 
@@ -134,8 +139,8 @@ public abstract class AbstractBatchTest {
 
 		    final var line = imageFileId + ";" + imageFileName + ";" + imageEncodedString;
 
-		    writer.write(line);
-		    writer.newLine();
+		    bufferWriter.write(line);
+		    bufferWriter.newLine();
 
 		    i++;
 

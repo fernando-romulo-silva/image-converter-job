@@ -23,8 +23,8 @@ public interface ConvertImageServiceClient {
     @PostMapping(value = CONVERTION_URL, consumes = { MULTIPART_FORM_DATA_VALUE }, produces = APPLICATION_JSON_VALUE)
     ImageConverterPostResponse convert( //
 		    @RequestHeader //
-		    final Map<String, String> headers, //
+		    Map<String, String> headers, //
 		    //
 		    @RequestPart(name = "file", required = true) //
-		    final MultipartFile file);
+		    MultipartFile file);
 }

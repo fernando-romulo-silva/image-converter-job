@@ -1,5 +1,7 @@
 package org.imageconverter.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -8,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BatchCommandLineRunner implements CommandLineRunner {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchCommandLineRunner.class);
 
     private final JobLauncher jobLauncher;
 
@@ -30,6 +34,7 @@ public class BatchCommandLineRunner implements CommandLineRunner {
 			.toJobParameters();
 
 	final var execution = jobLauncher.run(job, jobParameters);
-	System.out.println("STATUS :: " + execution.getStatus());
+	
+	LOGGER.info("STATUS :: {}", execution.getStatus());
     }
 }

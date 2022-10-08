@@ -1,10 +1,9 @@
 package org.imageconverter.infra;
 
-public final record ImageFileLoad( //
+public record ImageFileLoad( //
 		String id, //
 		String fileName, //
 		String fileContent //
 ) {
 
-};
-
+}

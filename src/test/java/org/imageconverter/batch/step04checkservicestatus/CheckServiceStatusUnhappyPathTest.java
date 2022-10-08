@@ -17,7 +17,7 @@ import org.imageconverter.batch.AbstractDataBatchTest;
 import org.imageconverter.batch.step02splitfile.SplitFileStepExecutionDecider;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
-import org.imageconverter.config.DataSourceConfig;
+import org.imageconverter.config.DataSourceConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
@@ -54,7 +54,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			DataSourceConfiguration.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
 			//
 			// Other class
 			ImageService.class, SplitFileStepExecutionDecider.class, DefaultStepListener.class, //			

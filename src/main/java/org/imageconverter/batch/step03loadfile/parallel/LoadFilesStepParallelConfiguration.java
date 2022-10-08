@@ -103,7 +103,7 @@ public class LoadFilesStepParallelConfiguration {
 	final var filesFolder = resolver.getResources(processingFolder.getURI() + separator + baseName + "*.txt");
 
 	final var filesList = Stream.of(filesFolder) //
-			.filter(r -> !equalsIgnoreCase(r.getFilename(), fileName)) //
+			.filter(file -> !equalsIgnoreCase(file.getFilename(), fileName)) //
 			.toList();
 
 	final var resources = filesList.toArray(new Resource[0]);

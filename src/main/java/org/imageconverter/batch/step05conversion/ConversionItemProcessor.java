@@ -74,10 +74,10 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	final var fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file", IMAGE_PNG_VALUE, true, item.getName());
 
 	try (//
-			final var cont = new ByteArrayInputStream(content); //
-			final var os = fileItem.getOutputStream()) {
+		var byteArrayIn = new ByteArrayInputStream(content); //
+		var outputStream = fileItem.getOutputStream()) {
 
-	    IOUtils.copy(cont, os);
+	    IOUtils.copy(byteArrayIn, outputStream);
 
 	} catch (final IOException ex) {
 

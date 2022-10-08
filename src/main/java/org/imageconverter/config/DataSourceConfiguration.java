@@ -17,11 +17,11 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-public class DataSourceConfig {
+public class DataSourceConfiguration {
 
     private final Map<String, String> domainDataSourceMap;
 
-    public DataSourceConfig(@Qualifier("domainDataSourceMap") final Map<String, String> domainDataSourceMap) {
+    public DataSourceConfiguration(@Qualifier("domainDataSourceMap") final Map<String, String> domainDataSourceMap) {
 	super();
 	this.domainDataSourceMap = domainDataSourceMap;
     }
@@ -29,15 +29,13 @@ public class DataSourceConfig {
     @Bean(name = "batchDataSource")
     @BatchDataSource
     DataSource batchDataSource() {
-	final var batchDataSource = new EmbeddedDatabaseBuilder() //
+	return new EmbeddedDatabaseBuilder() //
 			.setType(EmbeddedDatabaseType.HSQL) //
 			.setName("batchDataSource") //
 			.addScripts(//
 					"classpath:org/springframework/batch/core/schema-drop-hsqldb.sql", //
 					"classpath:org/springframework/batch/core/schema-hsqldb.sql") //
 			.build();
-
-	return batchDataSource;
     }
 
     @Primary

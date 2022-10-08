@@ -43,7 +43,7 @@ import org.imageconverter.batch.step05conversion.ConvertionItemWriter;
 import org.imageconverter.batch.step05conversion.ConvertionStepConfiguration;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
-import org.imageconverter.config.DataSourceConfig;
+import org.imageconverter.config.DataSourceConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.config.openfeign.OpenFeignConfiguration;
 import org.imageconverter.domain.ImageRepository;
@@ -85,7 +85,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, ConvertImageServiceClient.class, //
+			DataSourceConfiguration.class, PersistenceJpaConfig.class, AppProperties.class, ConvertImageServiceClient.class, //
 			// 
 			// Other class
 			ImageService.class, DefaultStepListener.class, //			

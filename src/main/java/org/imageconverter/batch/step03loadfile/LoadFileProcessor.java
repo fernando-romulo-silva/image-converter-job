@@ -34,11 +34,12 @@ public class LoadFileProcessor implements ItemProcessor<ImageFileLoad, Image> {
     @Override
     public Image process(final ImageFileLoad item) throws Exception {
 
-	LOGGER.info("ImageFileLoad id '{}', fileName '{}'", item.id(), item.fileName());
+	LOGGER.info("ImageFileLoad id '{}', fileName '{}'", item.id(), item.fileName()); // NOPMD - GuardLogStatement: waiting for SLF4J 2
+	// LOGGER.atInfo().log("ImageFileLoad id '{}', fileName '{}'", item.id(), item.fileName()); waiting for SLF4J 2
 	
 	final var image = new Image(item.fileName(), batchFileName, item.fileContent(), jobExecution.getJobId());
 
-	LOGGER.info("Batch file name id '{}', created '{}' ", batchFileName, image.getCreated());
+	LOGGER.info("Batch file name id '{}', created '{}' ", batchFileName, image.getCreated()); // NOPMD - GuardLogStatement: waiting for SLF4J 2
 
 	return image;
     }

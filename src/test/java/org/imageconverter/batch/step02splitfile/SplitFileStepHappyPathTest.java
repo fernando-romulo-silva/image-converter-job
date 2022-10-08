@@ -22,7 +22,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.imageconverter.batch.AbstractBatchTest;
 import org.imageconverter.config.AppProperties;
 import org.imageconverter.config.BatchConfiguration;
-import org.imageconverter.config.DataSourceConfig;
+import org.imageconverter.config.DataSourceConfiguration;
 import org.imageconverter.config.PersistenceJpaConfig;
 import org.imageconverter.util.DefaultStepListener;
 import org.junit.jupiter.api.AfterAll;
@@ -51,7 +51,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @ContextConfiguration( //
 		classes = { //
 			// Configs
-			DataSourceConfig.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
+			DataSourceConfiguration.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, //
 			//
 			// Other class
 			SplitFileStepExecutionDecider.class, DefaultStepListener.class, //			

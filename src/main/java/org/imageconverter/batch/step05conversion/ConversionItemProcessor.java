@@ -48,7 +48,8 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	this.jobExecution = jobExecution;
     }
 
-    public Image process(final Image item) throws Exception {
+    @Override
+    public Image process(final Image item) {
 
 	LOGGER.info("Item '{}' is processing", item.getName());
 
@@ -83,8 +84,7 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	    throw new IllegalArgumentException("Invalid file: " + ExceptionUtils.getRootCauseMessage(ex), ExceptionUtils.getRootCause(ex));
 	}
 
-	final var multipartFile = new CommonsMultipartFile(fileItem);
-	return multipartFile;
+	return new CommonsMultipartFile(fileItem);
     }
 
     private Map<String, String> createHeader() {
@@ -96,10 +96,9 @@ public class ConversionItemProcessor implements ItemProcessor<Image, Image> {
 	@SuppressWarnings("unchecked")
 	final var cookies = ofNullable((List<String>) jobExecutionContext.get("COOKIES")).orElse(List.<String>of());
 
-	final var headers = Map.<String, String>of( //
+	return Map.<String, String>of( //
 			"Execution-Type", EXECUTION_TYPE, //
 			"X-XSRF-TOKEN", (String) csr, //
 			"Cookie", cookies.stream().collect(joining(";")));
-	return headers;
     }
 }

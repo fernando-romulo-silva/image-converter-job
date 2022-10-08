@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -70,9 +71,7 @@ public abstract class AbstractBatchTest {
 
 	final var filePath = inputFolder.getFile().getAbsolutePath() + separator + fileName;
 
-	try (//
-		final var fileWriter = new FileWriter(filePath, false);
-		final var bufferWriter = new BufferedWriter(fileWriter)) {
+	try (final var bufferWriter = Files.newBufferedWriter(Paths.get(filePath))) {
 
 	    for (final var resource : images) {
 
@@ -122,10 +121,7 @@ public abstract class AbstractBatchTest {
 
 	    final var fileName = processingAbsolutePath + separator + expectedFilesNames.get(filePos);
 
-	    
-	    try (//
-		    final var fileWriter = new FileWriter(fileName, false);
-		    final var bufferWriter = new BufferedWriter(fileWriter)) {
+	    try (final var bufferWriter = Files.newBufferedWriter(Paths.get(fileName))) {
 
 		for (final var resource : imagesLists) {
 

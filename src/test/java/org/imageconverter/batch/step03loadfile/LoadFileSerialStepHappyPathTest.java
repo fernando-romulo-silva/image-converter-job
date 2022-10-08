@@ -99,8 +99,8 @@ class LoadFileSerialStepHappyPathTest extends AbstractDataBatchTest {
     void executeLoadFileSerialStep() throws IOException {
 	
 	// given
-	final var idImagesList = imagesDTO.stream().map( i -> i.getKey()).toList();
-	final var nameImagesList = imagesDTO.stream().map( i -> i.getValue()).toList();
+	final var idImagesList = imagesDTO.stream().map(elem -> elem.getKey()).toList();
+	final var nameImagesList = imagesDTO.stream().map(elem -> elem.getValue()).toList();
 
 	// when
 	final var jobExecution = jobLauncherTestUtils.launchStep(LOAD_FILE_STEP_SERIAL, defaultJobParameters());
@@ -114,8 +114,13 @@ class LoadFileSerialStepHappyPathTest extends AbstractDataBatchTest {
 	@SuppressWarnings("unchecked")
 	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
 
-	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
-	assertThat(dbList).map(d -> Long.toString(d.getId())).containsAll(idImagesList);
-	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
+	assertThat(dbList)//
+		.hasSize(imagesDTO.size()) //
+		.allMatch(element -> idImagesList.contains(Long.toString(element.getId())))
+		.allMatch(element -> nameImagesList.contains(element.getName()));
+	
+//	assertThat(dbList.size()).isEqualByComparingTo(imagesDTO.size());
+//	assertThat(dbList).map(d -> Long.toString(d.getId())).containsAll(idImagesList);
+//	assertThat(dbList).map(d -> d.getName()).containsAll(nameImagesList);
     }
 }

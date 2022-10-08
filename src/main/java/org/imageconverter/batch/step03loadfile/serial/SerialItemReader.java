@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Component
 public class SerialItemReader extends FlatFileItemReader<ImageFileLoad> {
-
+    
     SerialItemReader( //
 		    @Value("#{jobParameters['fileName']}") //
 		    final String fileName, //

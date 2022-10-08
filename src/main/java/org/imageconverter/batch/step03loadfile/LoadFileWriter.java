@@ -24,7 +24,7 @@ public class LoadFileWriter implements ItemWriter<Image> {
     }
 
     @Override
-    public void write(List<? extends Image> list) throws Exception {
+    public void write(final List<? extends Image> list) throws Exception {
 
 	LOGGER.info("Save '{}' images", list.size());
 

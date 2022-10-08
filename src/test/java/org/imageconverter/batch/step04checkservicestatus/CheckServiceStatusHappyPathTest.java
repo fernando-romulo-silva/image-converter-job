@@ -73,7 +73,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @ActiveProfiles("test")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class CheckServiceStatusHappyPathTest extends AbstractDataBatchTest {
+class CheckServiceStatusHappyPathTest extends AbstractDataBatchTest {
 
     private WireMockServer wireMockServer;
 

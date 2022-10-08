@@ -84,7 +84,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 @TestPropertySource(properties = "application.split-file-size=4")
 //
 @TestInstance(Lifecycle.PER_CLASS)
-public class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
+class ConvertionStepHappyPathTest extends AbstractDataBatchTest {
 
     private WireMockServer wireMockServer;
 

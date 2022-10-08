@@ -71,8 +71,6 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
     @BeforeAll
     void beforeAll() throws IOException {
 
-//	jobRepositoryTestUtils = new JobRepositoryTestUtils(jobRepository, batchDataSource);
-
 	createBatchFile();
 
 	final var inputFolderAbsolutePath = Paths.get(inputFolder.getURI());

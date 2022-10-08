@@ -106,7 +106,7 @@ public class LoadFilesStepParallelConfiguration {
 			.filter(r -> !equalsIgnoreCase(r.getFilename(), fileName)) //
 			.toList();
 
-	final var resources = filesList.toArray(new Resource[filesList.size()]);
+	final var resources = filesList.toArray(new Resource[0]);
 
 	partitioner.setResources(resources);
 	partitioner.partition(10);

@@ -8,12 +8,12 @@ import org.springframework.validation.BindException;
 public class ImageMapper extends BeanWrapperFieldSetMapper<ImageFileLoad> {
 
     @Override
-    public ImageFileLoad mapFieldSet(final FieldSet fs) throws BindException {
+    public ImageFileLoad mapFieldSet(final FieldSet fileSet) throws BindException {
 
 	return new ImageFileLoad( //
-			fs.readRawString("id"), //
-			fs.readString("fileName"), //
-			fs.readString("fileContent") //
+			fileSet.readRawString("id"), //
+			fileSet.readString("fileName"), //
+			fileSet.readString("fileContent") //
 	);
     }
 }

@@ -36,8 +36,6 @@ public class LoadFileProcessor implements ItemProcessor<ImageFileLoad, Image> {
 
 	LOGGER.info("ImageFileLoad id '{}', fileName '{}'", item.id(), item.fileName());
 	
-	jobExecution.getId();
-
 	final var image = new Image(item.fileName(), batchFileName, item.fileContent(), jobExecution.getJobId());
 
 	LOGGER.info("Batch file name id '{}', created '{}' ", batchFileName, image.getCreated());

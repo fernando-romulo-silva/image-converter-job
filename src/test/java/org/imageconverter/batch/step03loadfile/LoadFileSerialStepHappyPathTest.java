@@ -111,8 +111,7 @@ class LoadFileSerialStepHappyPathTest extends AbstractDataBatchTest {
 	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE); // one step execution
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 	
-	@SuppressWarnings("unchecked")
-	final var dbList = (List<Image>) entityManager.createQuery("Select i from Image i").getResultList();
+	final var dbList = entityManager.createQuery("Select i from Image i", Image.class).getResultList();
 
 	assertThat(dbList)//
 		.hasSize(imagesDTO.size()) //

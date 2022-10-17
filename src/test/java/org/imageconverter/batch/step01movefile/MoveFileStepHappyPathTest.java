@@ -45,6 +45,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 			// Configs
 			DataSourceConfiguration.class, PersistenceJpaConfig.class, AppProperties.class, BatchConfiguration.class, 
 			//
+			// Other class
 			SplitFileStepExecutionDecider.class, DefaultStepListener.class, //
 			//
 			// First Step: MoveFileStep

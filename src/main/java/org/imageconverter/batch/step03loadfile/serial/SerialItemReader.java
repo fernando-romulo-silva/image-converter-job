@@ -37,7 +37,7 @@ public class SerialItemReader extends FlatFileItemReader<ImageFileLoad> {
 
 	final var processingAbsolutePath = Paths.get(processingFolder.getURI());
 	final var pathFile = Paths.get(processingAbsolutePath.toString() + separator + fileName);
-	final var uri = new URI("file:" + pathFile.toString());
+	final var uri = new URI("file:" + pathFile.toString().replace("\\", "/"));
 
 	final var lineMapper = new DefaultLineMapper<ImageFileLoad>();
 	lineMapper.setFieldSetMapper(loadFileSetMapper);

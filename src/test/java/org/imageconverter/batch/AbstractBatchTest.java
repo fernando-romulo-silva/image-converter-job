@@ -3,8 +3,6 @@ package org.imageconverter.batch;
 import static java.io.File.separator;
 import static java.math.RoundingMode.UP;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;

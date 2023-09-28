@@ -96,7 +96,7 @@ class LoadFileParalellStepHappyPathTest extends AbstractDataBatchTest {
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(qtyFiles + 1); // qtdy file == number of executions + Main Thread
+	assertThat(actualStepExecutions).hasSize(qtyFiles + 1); // qtdy file == number of executions + Main Thread
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
 	@SuppressWarnings("unchecked")

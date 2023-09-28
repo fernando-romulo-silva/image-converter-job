@@ -1,5 +1,7 @@
 package org.imageconverter.batch.step06deletesplited;
 
+import java.nio.file.Files;
+
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.UnexpectedJobExecutionException;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -17,10 +19,10 @@ public class FileDeletingTasklet implements Tasklet, InitializingBean {
 
     public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) throws Exception {
 
-	for (final var r : resources) {
-	    final var file = r.getFile();
+	for (final var resource : resources) {
+	    final var file = resource.getFile();
 
-	    final boolean deleted = file.delete();
+	    final boolean deleted = Files.deleteIfExists(file.toPath());
 
 	    if (!deleted) {
 		throw new UnexpectedJobExecutionException("Could not delete file " + file.getPath());

@@ -110,7 +110,7 @@ class SplitFileStepHappyPathTest extends AbstractBatchTest {
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE);
+	assertThat(actualStepExecutions).hasSize(INTEGER_ONE);
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 
 	final var resultedFilesNames = new ArrayList<String>();

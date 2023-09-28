@@ -108,7 +108,7 @@ class LoadFileSerialStepHappyPathTest extends AbstractDataBatchTest {
 	final var actualJobExitStatus = jobExecution.getExitStatus();
 
 	// then
-	assertThat(actualStepExecutions.size()).isEqualTo(INTEGER_ONE); // one step execution
+	assertThat(actualStepExecutions).hasSize(INTEGER_ONE); // one step execution
 	assertThat(actualJobExitStatus.getExitCode()).contains(COMPLETED.getExitCode());
 	
 	final var dbList = entityManager.createQuery("Select i from Image i", Image.class).getResultList();

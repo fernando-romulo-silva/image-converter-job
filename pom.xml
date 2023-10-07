@@ -9,6 +9,13 @@
 		<artifactId>allset-java</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+	
+	<name>Image Converte Job</name>
+  	<description>
+		An batch application execute image's text recognition using spring boot batch and others.
+    </description>
+    <inceptionYear>2021</inceptionYear>
+    <url>https://${scm.platform}/${scm.account}/${project.artifactId}</url>	
 
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -16,10 +23,10 @@
 
 		<spring-boot.version>2.7.12</spring-boot.version>
 		<spring-boot-cloud.version>2021.0.4</spring-boot-cloud.version>
-		
 	</properties>
 
 	<dependencyManagement>
+		
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -56,17 +63,17 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-		
-<dependency>
-    <groupId>io.github.openfeign.form</groupId>
-    <artifactId>feign-form</artifactId>
-    <version>3.8.0</version>
-</dependency>	
-	
-<dependency>
-    <groupId>io.github.openfeign.form</groupId>
-    <artifactId>feign-form-spring</artifactId>
-</dependency>	
+
+		<dependency>
+			<groupId>io.github.openfeign.form</groupId>
+			<artifactId>feign-form</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.openfeign.form</groupId>
+			<artifactId>feign-form-spring</artifactId>
+		</dependency>	
 		
 		<dependency>
     		<groupId>io.github.openfeign</groupId>

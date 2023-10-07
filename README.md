@@ -34,14 +34,12 @@ It's very simple application, just a controller and a service:
 
 # Technologies
 
+- Git
 - Java
 - Maven
 - Spring Boot
 - Spring Security
 - Spring MVC
-- Tesseract
-
-[//]: # (## Implantação em produção - Back end: Heroku %})
 
 # Modules
 

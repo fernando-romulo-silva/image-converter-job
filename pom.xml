@@ -292,9 +292,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<!--
 				<configuration combine.self="override" />
-				-->
 			</plugin>
 
 			<plugin>
@@ -339,10 +337,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<configuration>
-					<outputName>${outputName}</outputName>
-					<showSuccess>true</showSuccess>
-				</configuration>
+				<configuration combine.self="override" />
 			</plugin>
 
 			<plugin>

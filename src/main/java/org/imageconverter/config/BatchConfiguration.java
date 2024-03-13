@@ -65,8 +65,7 @@ public class BatchConfiguration {
 		    final Step convertionStep, // Step 5
 //		    final Step deleteSplitedStep, //
 //		    final Step finalizeStep,
-		    final JobExecutionDecider splitFileStepExecutionDecider//
-    ) {
+		    final JobExecutionDecider splitFileStepExecutionDecider) {
 	
 	return jobBuilderFactory.get(CONVERT_IMAGE_JOB) //
 			.incrementer(new RunIdIncrementer()) //

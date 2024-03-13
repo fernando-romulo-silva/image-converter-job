@@ -2,6 +2,6 @@ package org.imageconverter.domain;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface ImageRepository extends CrudRepository<Image, String> {
+public interface ImageRepository extends CrudRepository<Image, Long> {
 
 }

@@ -4,67 +4,68 @@
 #
 #============== Applicaton ===========================================================================
 application:
-    image-converter-service:
-        url: ${IMAGE_CONVERTER_SERVER_URL}
-        user : ${IMAGE_CONVERTER_SERVER_USER}
-        password : ${IMAGE_CONVERTER_SERVER_PASSWORD}
-            
-    batch-folders:
-        input-files: file:${INPUT_FILE_FOLDER}
-        error-files: file:${ERROR_FILE_FOLDER}
-        processing-files: file:${PROCESSING_FILE_FOLDER}
-        processed-files: file:${PROCESSED_FILE_FOLDER}
-   
-    split-file-size: ${SPLIT_FILE_SIZE}
-    
-    chunk-size: ${CHUNK_SIZE:50}
-    pagination-size: ${PAGINATION_SIZE:50}        
+  image-converter-service:
+    url: ${IMAGE_CONVERTER_SERVER_URL}
+    user: ${IMAGE_CONVERTER_SERVER_USER}
+    password: ${IMAGE_CONVERTER_SERVER_PASSWORD}
+
+  batch-folders:
+    input-files: file:${INPUT_FILE_FOLDER}
+    error-files: file:${ERROR_FILE_FOLDER}
+    processing-files: file:${PROCESSING_FILE_FOLDER}
+    processed-files: file:${PROCESSED_FILE_FOLDER}
+
+  split-file-size: ${SPLIT_FILE_SIZE}
+
+  chunk-size: ${CHUNK_SIZE:50}
+  pagination-size: ${PAGINATION_SIZE:50}
 
 #============== Spring ==============================================================================
 spring:
-    application:
-        name: image-converter-job
-        
-#============== Batch ==============================================================================
-    batch:
-        jdbc.initialize-schema: never
-        # always, embedded and never
-        job.enabled: false
-        
-#============== Data Source ===========================================================================
-    datasource:
-        driver-class-name: ${DATABASE_DRIVER}
-        url: ${DATABASE_URL}
-        username: ${DATABASE_USER}
-        password: ${DATABASE_PASSWORD}
-        hikari:
-            poolName: SpringBootJPAHikariCP
-            connectionTimeout: 60000
-            idleTimeout: 30000
-            maxLifetime: 2000000
-            maximumPoolSize: 20
-            minimumIdle: 5
-   
-    jpa:
-        database-platform: ${DATABASE_PLATFORM}
-        properties:
-            hibernate:
-                jdbc:
-                    time_zone: GMT-3
-            cache:
-               region:
-                     factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
-               use_query_cache: true
-               use_second_level_cache: true
-            javax:
-                persistence:
-                    retrieveMode:
-                        mode: ENABLE_SELECTIVE
-                    sharedCache:
-                        mode: ENABLE_SELECTIVE
+  main:
+    web-application-type: none
+  application:
+    name: image-converter-job
+
+  #============== Batch ==============================================================================
+  batch:
+    jdbc.initialize-schema: never
+    # always, embedded and never
+    job.enabled: false
+
+  #============== Data Source ===========================================================================
+  datasource:
+    driver-class-name: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      poolName: SpringBootJPAHikariCP
+      connectionTimeout: 60000
+      idleTimeout: 30000
+      maxLifetime: 2000000
+      maximumPoolSize: 20
+      minimumIdle: 5
+
+  jpa:
+    database-platform: ${DATABASE_PLATFORM}
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: GMT-3
+      cache:
+        region:
+          factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+        use_query_cache: true
+        use_second_level_cache: true
+      javax:
+        persistence:
+          retrieveMode:
+            mode: ENABLE_SELECTIVE
+          sharedCache:
+            mode: ENABLE_SELECTIVE
 #============ Logging =======================================================================================
 # logging.level.root: DEBUG
-
 
 #============ Open Feigh ====================================================================================
 feign:
@@ -74,4 +75,3 @@ feign:
         connectTimeout: 2000
         readTimeout: 2000
         loggerLevel: basic
-

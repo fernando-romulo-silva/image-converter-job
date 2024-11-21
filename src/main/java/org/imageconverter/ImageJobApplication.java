@@ -17,6 +17,6 @@ public class ImageJobApplication {
      * @param args the application arguments
      */
     public static void main(final String[] args) {
-	SpringApplication.run(ImageJobApplication.class, args);
+        SpringApplication.run(ImageJobApplication.class, args);
     }
 }

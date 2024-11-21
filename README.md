@@ -7,10 +7,6 @@
 
 I use this project to learn new technologies related to spring batch
 
-
-tesseract --version
-
-
 1) Read file from "to process" folder
 2) Put files on db
 3) Move files to "processing" folder
